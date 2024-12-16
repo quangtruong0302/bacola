@@ -1,0 +1,61 @@
+
+extends ../../layouts/default.pug
+include ../../mixins/form-filter.pug
+include ../../mixins/form-change-multi.pug
+include ../../mixins/form-search.pug
+include ../../mixins/form-add.pug
+include ../../mixins/form-trash.pug
+include ../../mixins/pagination.pug
+
+block main 
+    .main-top
+        .form-filter-change-multi-search.d-flex.align-items-center
+            +form-filter()
+            +form-change-multi-trash()
+            +form-search()
+            +form-add("Thêm sản phẩm")
+            +form-trash()
+    .main-table 
+        table.table.table-bordered(checkbox-multi)
+            thead
+                tr
+                    th.check-box
+                        label
+                            input(type="checkbox" name="check-all")
+                    th(scope='col') STT
+                    th(scope='col') Tên sản phẩm
+                    th(scope='col') Hình ảnh
+                    th(scope='col') Giá
+                    th(scope='col') Số lượng
+                    th(scope='col') Giảm giá (%)
+                    th(scope='col') Vị trí
+                    th(scope='col') Ngày xóa
+                    th(scope='col') Người xóa
+                    th(scope='col') Hành động
+            tbody
+                each product, index in products
+                    tr
+                        td.check-box
+                            label
+                                input(type="checkbox" name="id" value=product._id)
+                        td #{index + 1}
+                        td.td-title #{product.title}
+                        td.td-image
+                            img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
+                        td #{product.price}
+                        td #{product.stock}
+                        td -#{product.discountPercentage}%
+                        td #{product.position}
+                        td 20/12/2024
+                        td Bùi Quang Trưởng
+                        td
+                            button.btn.btn-success.mgr-10px(type="button")
+                                i.fa-solid.fa-rotate-left.mgr-5px
+                                span Khôi phục
+                            button.btn.btn-danger(type="button" data-id=product._id data-name="product" button-delete-single)
+                                i.fa-solid.fa-delete-left.mgr-5px
+                                span Xóa vĩnh viễn
+    +pagination(pagination)      
+    form(action="" method="POST" form-change-status).d-none     
+    form(action="" method="POST" form-delete-single).d-none      
+    

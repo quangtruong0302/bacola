@@ -1,0 +1,13 @@
+mixin form-search()
+    .card.form-search.mgr-10px
+        .card-header
+            | Tìm kiếm
+        .card-body
+            form(action="", method="GET" form-search).d-flex.align-items-center
+                .input-group
+                    -if(search)
+                        input(type="text", class="form-control", id="searchInput",name="search" placeholder="Nhập nội dung tìm kiếm..." value=search)
+                    -else 
+                        input(type="text", class="form-control", id="searchInput",name="search" placeholder="Nhập nội dung tìm kiếm...")
+                    button(type="submit", class="btn btn-primary")
+                        i(class="fas fa-search")

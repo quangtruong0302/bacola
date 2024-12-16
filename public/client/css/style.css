@@ -87,19 +87,12 @@ header {
   border-bottom: 0.3px solid rgba(106, 100, 100, 0.3);
   padding: 10px 0;
 }
+.navigation .category-btn {
+  border: none;
+}
 .navigation .category-btn button {
-  width: 100%;
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  text-align: left;
-}
-.navigation .category-btn button i {
-  margin-right: 10px;
-}
-.navigation .category-btn button:hover {
+  border-radius: 40px;
   background-color: #2bbef9;
-  color: white;
 }
 .navigation .nav-links {
   text-align: right;
@@ -173,4 +166,30 @@ footer .footer-section a i {
   footer .footer-section {
     margin-bottom: 20px;
   }
+}
+
+#main h1 {
+  color: #343a40;
+}
+#main .card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+#main .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+#main .card img {
+  height: 200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+#main .card .card-title {
+  color: #007bff;
+}
+#main .card .btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+#main .card .btn-primary:hover {
+  background-color: #0056b3;
 }/*# sourceMappingURL=style.css.map */

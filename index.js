@@ -6,6 +6,11 @@ require("dotenv").config();
 const Database = require("./config/database");
 Database.connect();
 
+const methodOverride = require("method-override");
+const bodyParser = require("body-parser");
+app.use(methodOverride("_method"));
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.set("views engine", "pug");
 app.set("views", `${__dirname}/views`);
 app.use(express.static(`${__dirname}/public`));

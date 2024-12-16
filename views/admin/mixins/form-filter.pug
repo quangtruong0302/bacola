@@ -1,0 +1,14 @@
+mixin form-filter()
+    .card.mgr-10px.form-filter
+        .card-header
+            | Trạng thái
+        .card-body
+            button.btn.btn-primary.mgr-10px(type="button" button-status="")
+                span Tất cả
+            button.btn.btn-success.mgr-10px(type="button" button-status="active")
+                i.fa-solid.fa-check
+                span Hoạt động 
+            button.btn.btn-danger(type="button" button-status="inactive")
+                i.fa-solid.fa-xmark
+                span Không hoạt động
+        
