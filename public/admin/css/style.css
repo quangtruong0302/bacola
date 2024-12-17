@@ -146,7 +146,7 @@ header .header-right ul .setting .red-dot {
   font-size: 15px;
 }
 #main .main-top .form-filter-change-multi-search .form-search input {
-  width: 207px;
+  width: 214px;
   padding: 8px 12px;
   border-radius: 0px;
   border-right: none;
@@ -215,4 +215,8 @@ header .header-right ul .setting .red-dot {
 nav.pagination {
   margin-top: 10px;
   float: bottom;
+}
+
+.mgl-0px {
+  margin-left: 0px;
 }/*# sourceMappingURL=style.css.map */

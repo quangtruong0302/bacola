@@ -14,7 +14,6 @@ block main
             +form-change-multi-trash()
             +form-search()
             +form-add("Thêm sản phẩm")
-            +form-trash()
     .main-table 
         table.table.table-bordered(checkbox-multi)
             thead
@@ -49,13 +48,14 @@ block main
                         td 20/12/2024
                         td Bùi Quang Trưởng
                         td
-                            button.btn.btn-success.mgr-10px(type="button")
+                            button.btn.btn-success.mgr-10px(type="button" button-restore-single data-id=product._id)
                                 i.fa-solid.fa-rotate-left.mgr-5px
                                 span Khôi phục
-                            button.btn.btn-danger(type="button" data-id=product._id data-name="product" button-delete-single)
+                            button.btn.btn-danger(type="button" data-id=product._id data-name="product-in-trash" button-delete-single)
                                 i.fa-solid.fa-delete-left.mgr-5px
                                 span Xóa vĩnh viễn
     +pagination(pagination)      
     form(action="" method="POST" form-change-status).d-none     
-    form(action="" method="POST" form-delete-single).d-none      
+    form(action="" method="POST" form-delete-single).d-none   
+    form(action="" method="POST" form-restore-single).d-none      
     

@@ -166,7 +166,7 @@ header {
       .form-search {
         // width: 45%;
         input {
-          width: 207px;
+          width: 214px;
           padding: 8px 12px;
           border-radius: 0px;
           border-right: none;
@@ -239,4 +239,7 @@ header {
 nav.pagination {
   margin-top: 10px;
   float: bottom;
+}
+.mgl-0px {
+  margin-left: 0px;
 }

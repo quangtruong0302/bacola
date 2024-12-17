@@ -30,6 +30,8 @@ module.exports.product = async (req, res) => {
       countProduct,
       req.query
     );
+    const countTrash = await Product.countDocuments({ deleted: true });
+    console.log(countTrash);
 
     const records = await Product.find(find)
       .limit(objPagination.limitItems)
@@ -39,6 +41,7 @@ module.exports.product = async (req, res) => {
       products: records,
       search: req.query.search,
       pagination: objPagination,
+      countTrash: countTrash,
     });
   } catch (error) {
     console.log(error);
@@ -100,7 +103,7 @@ module.exports.delete = async (req, res) => {
 module.exports.trash = async (req, res) => {
   try {
     const find = {
-      deleted: false,
+      deleted: true,
     };
     if (req.query.status) {
       if (req.query.status == "active") {
@@ -110,7 +113,6 @@ module.exports.trash = async (req, res) => {
         find.status = "inactive";
       }
     }
-
     const objSearch = searchHelper(req.query); // Tìm kiếm sản phẩm
     if (objSearch.regex) {
       find.title = objSearch.regex;
@@ -134,6 +136,26 @@ module.exports.trash = async (req, res) => {
       search: req.query.search,
       pagination: objPagination,
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports.restore = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Product.updateOne({ _id: id }, { deleted: false });
+    res.redirect("back");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports.deleteTrash = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Product.deleteOne({ _id: id });
+    res.redirect("back");
   } catch (error) {
     console.log(error);
   }

@@ -118,7 +118,7 @@ if (formChangeMulti) {
   });
 }
 
-// Xử lí xoá sản phẩm (Xoá mềm)
+// Xử lí xoá sản phẩm
 const buttonDeleteSingle = document.querySelectorAll("[button-delete-single]");
 if (buttonDeleteSingle.length > 0) {
   const formDeleteSingle = document.querySelector("[form-delete-single]");
@@ -131,8 +131,9 @@ if (buttonDeleteSingle.length > 0) {
         let action = "";
         if (dataName == "product") {
           action = `/administrator/products/delete/${id}?_method=PATCH`;
-        } else {
-          action = `/administrator/categories/delete/${id}?_method=PATCH`;
+        }
+        if (dataName == "product-in-trash") {
+          action = `/administrator/products/trash/delete/${id}?_method=DELETE`;
         }
 
         formDeleteSingle.action = action;
@@ -142,4 +143,20 @@ if (buttonDeleteSingle.length > 0) {
   });
 }
 
-// Xử lí xoá sản phẩm (Xoá vĩnh viễn)
+// Xử lí khôi phục sản phẩm
+const buttonRestoreSingle = document.querySelectorAll(
+  "[button-restore-single]"
+);
+if (buttonRestoreSingle.length > 0) {
+  const formRestoreSingle = document.querySelector("[form-restore-single]");
+  buttonRestoreSingle.forEach((button) => {
+    button.addEventListener("click", () => {
+      const isConfirm = confirm("Bạn muốn khôi phục sản phẩm này?");
+      if (isConfirm) {
+        const id = button.getAttribute("data-id");
+        formRestoreSingle.action = `/administrator/products/trash/restore/${id}?_method=PATCH`;
+        formRestoreSingle.submit();
+      }
+    });
+  });
+}
