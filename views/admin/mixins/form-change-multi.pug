@@ -10,7 +10,7 @@ mixin form-change-multi()
                     option(value='inactive') Dừng hoạt động
                     option(value='delete-all') Xóa tất cả
                 input.d-none(type="text", name="list-id")
-                button.btn.btn-success.mg-0px(type="submit" button-status="active")
+                button.btn.btn-success.mg-0px(type="submit")
                     i.fa-solid.fa-arrow-right-long
 
 mixin form-change-multi-trash()
@@ -18,7 +18,7 @@ mixin form-change-multi-trash()
         .card-header
             | Hành động
         .card-body
-            form.d-flex.align-items-center(action="/administrator/products/change-multi?_method=PATCH" method="POST" form-change-multi) 
+            form.d-flex.align-items-center(action="/administrator/products/trash/change-multi?_method=PATCH" method="POST" form-change-multi) 
                 select.custom-select.mgr-10px(name="action-type")
                     option(selected='' disabled) Chọn hành động
                     option(value='delete-all') Xóa tất cả

@@ -1,3 +1,4 @@
+// Xử lí bộ lọc theo trạng thái
 const buttonStatus = document.querySelectorAll("[button-status]");
 if (buttonStatus.length > 0) {
   let url = new URL(window.location.href);
@@ -14,6 +15,7 @@ if (buttonStatus.length > 0) {
   });
 }
 
+// Xử lí tìm kiếm
 const formSearch = document.querySelector("[form-search]");
 if (formSearch) {
   let url = new URL(window.location.href);
@@ -28,6 +30,8 @@ if (formSearch) {
     window.location.href = url.href;
   });
 }
+
+// Xử lí phân trang
 const pagination = document.querySelectorAll("[button-pagination]");
 const buttonNext = document.querySelector("[button-next]");
 const buttonPrevsios = document.querySelector("[button-previous]");
@@ -46,6 +50,7 @@ if (pagination) {
   });
 }
 
+// Xử lí thay đổi trạng thái sản phẩm
 const buttonChangeSatus = document.querySelectorAll("[button-change-status]");
 if (buttonChangeSatus.length > 0) {
   const formChangeStatus = document.querySelector("[form-change-status]");
@@ -54,12 +59,13 @@ if (buttonChangeSatus.length > 0) {
       const dataId = button.getAttribute("data-id");
       const dataStatusCurrent = button.getAttribute("data-status");
       const dataStatus = dataStatusCurrent == "active" ? "inactive" : "active";
-      formChangeStatus.action = `/administratoristrator/products/change-status/${dataStatus}/${dataId}?_method=PATCH`;
+      formChangeStatus.action = `/administrator/products/change-status/${dataStatus}/${dataId}?_method=PATCH`;
       formChangeStatus.submit();
     });
   });
 }
 
+// Xử lí chọn nhiều sản phẩm
 const checkboxMulti = document.querySelector("[checkbox-multi]");
 if (checkboxMulti) {
   const checkAll = document.querySelector("input[name='check-all']");
@@ -160,3 +166,14 @@ if (buttonRestoreSingle.length > 0) {
     });
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const alertBox = document.getElementById("alertBox");
+  if (alertBox) {
+    setTimeout(() => {
+      alertBox.style.transition = "opacity 0.5s ease";
+      alertBox.style.opacity = "0"; // Dần dần ẩn đi
+      setTimeout(() => alertBox.remove(), 500); // Xóa hẳn phần tử sau khi ẩn
+    }, 5000); // Thời gian chờ 5 giây
+  }
+});

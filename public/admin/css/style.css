@@ -219,4 +219,11 @@ nav.pagination {
 
 .mgl-0px {
   margin-left: 0px;
+}
+
+.form-alert {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  min-width: 400px;
 }/*# sourceMappingURL=style.css.map */

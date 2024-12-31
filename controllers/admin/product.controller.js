@@ -31,11 +31,11 @@ module.exports.product = async (req, res) => {
       req.query
     );
     const countTrash = await Product.countDocuments({ deleted: true });
-    console.log(countTrash);
-
     const records = await Product.find(find)
       .limit(objPagination.limitItems)
-      .skip(objPagination.skip);
+      .skip(objPagination.skip)
+      .sort({ position: "desc" });
+
     res.render("admin/pages/product/product.pug", {
       pageTitle: "Quản lý Sản phẩm",
       products: records,
@@ -56,8 +56,11 @@ module.exports.changeStatus = async (req, res) => {
       const id = req.params.id;
       await Product.updateOne({ _id: id }, { status: status });
     }
+    req.flash("messageSuccess", "Cập nhật trạng thái thành công");
     res.redirect("back");
-  } catch (error) {}
+  } catch (error) {
+    req.flash("messageError", "Cập nhật trạng thái thất bại");
+  }
 };
 
 // [PATCH] /administrator/products/change-multi
@@ -71,15 +74,24 @@ module.exports.changeMulti = async (req, res) => {
           { _id: { $in: listID } },
           { status: actionType }
         );
+        req.flash(
+          "messageSuccess",
+          `Cập nhật trạng thái ${listID.length} sản phẩm thành công`
+        );
         break;
       case "inactive":
         await Product.updateMany(
           { _id: { $in: listID } },
           { status: actionType }
         );
+        req.flash(
+          "messageSuccess",
+          `Cập nhật trạng thái ${listID.length} sản phẩm thành công`
+        );
         break;
       case "delete-all":
         await Product.updateMany({ _id: { $in: listID } }, { deleted: true });
+        req.flash("messageSuccess", `Xóa ${listID.length} sản phẩm thành công`);
         break;
       default:
         break;
@@ -113,7 +125,7 @@ module.exports.trash = async (req, res) => {
         find.status = "inactive";
       }
     }
-    const objSearch = searchHelper(req.query); // Tìm kiếm sản phẩm
+    const objSearch = searchHelper(req.query);
     if (objSearch.regex) {
       find.title = objSearch.regex;
     }

@@ -6,6 +6,7 @@ include ../../mixins/form-search.pug
 include ../../mixins/form-add.pug
 include ../../mixins/form-trash.pug
 include ../../mixins/pagination.pug
+include ../../mixins/form-alert.pug
 
 block main 
     .main-top
@@ -15,6 +16,10 @@ block main
             +form-search()
             +form-add("Thêm sản phẩm")
             +form-trash(countTrash)
+    - if (messages.messageSuccess)
+        +form-alert-success(messages.messageSuccess)
+    - if (messages.messageError)
+        +form-alert-success(messages.messageError)
     .main-table 
         table.table.table-bordered(checkbox-multi)
             thead
@@ -25,7 +30,7 @@ block main
                     th(scope='col') STT
                     th(scope='col') Tên sản phẩm
                     th(scope='col') Hình ảnh
-                    th(scope='col') Giá
+                    th(scope='col') Giá($)
                     th(scope='col') Số lượng
                     th(scope='col') Giảm giá (%)
                     th(scope='col') Vị trí
@@ -43,7 +48,7 @@ block main
                         td.td-title #{product.title}
                         td.td-image
                             img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
-                        td #{product.price}
+                        td $#{product.price}
                         td #{product.stock}
                         td -#{product.discountPercentage}%
                         td #{product.position}

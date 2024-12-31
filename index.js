@@ -15,6 +15,13 @@ app.set("views engine", "pug");
 app.set("views", `${__dirname}/views`);
 app.use(express.static(`${__dirname}/public`));
 
+const flash = require("express-flash");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+app.use(cookieParser("bacola"));
+app.use(session({ cookie: { maxAge: 60000 } }));
+app.use(flash());
+
 Router(app);
 
 app.listen(process.env.PORT, () => {

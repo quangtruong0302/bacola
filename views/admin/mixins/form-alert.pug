@@ -1,0 +1,13 @@
+mixin form-alert-success(content)
+    #alertBox.form-alert.alert.alert-success.d-flex.align-items-center.justify-content-between(role="alert")
+        .d-flex.flex-column
+            strong Thông báo! 
+            span #{content}
+        i.fa-solid.fa-check-circle.fs-4.me-3
+
+mixin form-alert-error(content)
+    #alertBox.form-alert.alert.alert-danger.d-flex.align-items-center.justify-content-between(role="alert")
+        .d-flex.flex-column
+            strong Thông báo! 
+            span #{content}
+        i.fa-solid.fa-circle-exclamation.fs-4.me-3
