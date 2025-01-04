@@ -14,7 +14,7 @@ block main
             +form-filter()
             +form-change-multi()
             +form-search()
-            +form-add("Thêm sản phẩm")
+            +form-add("Thêm sản phẩm", "/administrator/products/create")
             +form-trash(countTrash)
     - if (messages.messageSuccess)
         +form-alert-success(messages.messageSuccess)
@@ -31,11 +31,11 @@ block main
                     th(scope='col') Tên sản phẩm
                     th(scope='col') Hình ảnh
                     th(scope='col') Giá($)
-                    th(scope='col') Số lượng
                     th(scope='col') Giảm giá (%)
+                    th(scope='col') Số lượng
                     th(scope='col') Vị trí
                     th(scope='col') Ngày tạo
-                    th(scope='col') Người tạo
+                    th(scope='col') Ngày chỉnh sửa
                     th(scope='col') Trạng thái
                     th(scope='col') Hành động
             tbody
@@ -49,23 +49,33 @@ block main
                         td.td-image
                             img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
                         td $#{product.price}
+                        td #{product.discountPercentage}%
                         td #{product.stock}
-                        td -#{product.discountPercentage}%
                         td #{product.position}
-                        td 20/12/2024
-                        td Bùi Quang Trưởng
+                        td 
+                            span #{moment(product.createdAt).format("HH:mm:ss")}
+                            br
+                            span #{moment(product.createdAt).format("DD/MM/YYYY")}
+                            br 
+                            span Bùi Quang Trưởng
+                        td 
+                            span #{moment(product.updatedAt).format("HH:mm:ss")}
+                            br
+                            span #{moment(product.updatedAt).format("DD/MM/YYYY")}
+                            br 
+                            span Bùi Quang Trưởng
+                             
                         td 
                             -if(product.status=="active")
                                 button.btn.btn-success(button-change-status data-status=`${product.status}` data-id=`${product._id}`)
                                     i.fa-solid.fa-check
                             -if(product.status=="inactive")
                                 button.btn.btn-danger(button-change-status data-status=`${product.status}` data-id=`${product._id}`)
-                                    i.fa-solid.fa-xmark
-
+                                    i.fa-solid.fa-ban
                         td
-                            button.btn.btn-success.mgr-10px(type="button")
+                            a.btn.btn-success.mgr-10px(href=`/administrator/products/detail/${product._id}`)
                                 i.fa-solid.fa-circle-info
-                            button.btn.btn-primary.mgr-10px(type="button")
+                            a.btn.btn-primary.mgr-10px(href=`/administrator/products/edit/${product._id}`)
                                 i.fa-regular.fa-pen-to-square
                             button.btn.btn-danger(type="button" data-id=product._id data-name="product" button-delete-single)
                                 i.fa-solid.fa-delete-left

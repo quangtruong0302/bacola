@@ -6,6 +6,7 @@ include ../../mixins/form-search.pug
 include ../../mixins/form-add.pug
 include ../../mixins/form-trash.pug
 include ../../mixins/pagination.pug
+include ../../mixins/form-alert.pug
 
 block main 
     .main-top
@@ -14,6 +15,10 @@ block main
             +form-change-multi-trash()
             +form-search()
             +form-add("Thêm sản phẩm")
+    - if (messages.messageSuccess)
+        +form-alert-success(messages.messageSuccess)
+    - if (messages.messageError)
+        +form-alert-success(messages.messageError)
     .main-table 
         table.table.table-bordered(checkbox-multi)
             thead

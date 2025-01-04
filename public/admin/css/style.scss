@@ -26,9 +26,15 @@ header {
     a {
       color: black;
       font-weight: bold;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       span {
         padding: 0 10px;
       }
+    }
+    img {
+      width: 35px;
     }
   }
   .page-title {
@@ -249,4 +255,24 @@ nav.pagination {
   top: 10px;
   right: 10px;
   min-width: 400px;
+}
+
+.detail {
+  // padding-top: 100px;
+  padding-top: 50px;
+  background-color: white;
+  height: 100vh;
+  .price {
+    font-size: 1.5rem;
+  }
+
+  .discount {
+    font-size: 1.25rem;
+  }
+  img {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #fff;
+  }
 }

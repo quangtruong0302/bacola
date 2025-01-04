@@ -172,8 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (alertBox) {
     setTimeout(() => {
       alertBox.style.transition = "opacity 0.5s ease";
-      alertBox.style.opacity = "0"; // Dần dần ẩn đi
-      setTimeout(() => alertBox.remove(), 500); // Xóa hẳn phần tử sau khi ẩn
-    }, 5000); // Thời gian chờ 5 giây
+      alertBox.style.opacity = "0";
+      setTimeout(() => alertBox.remove(), 500);
+    }, 2000);
   }
 });

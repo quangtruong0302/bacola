@@ -54,7 +54,10 @@ module.exports.changeStatus = async (req, res) => {
     if (req.params.status && req.params.id) {
       const status = req.params.status;
       const id = req.params.id;
-      await Product.updateOne({ _id: id }, { status: status });
+      await Product.updateOne(
+        { _id: id },
+        { status: status, updatedAt: Date.now() }
+      );
     }
     req.flash("messageSuccess", "Cập nhật trạng thái thành công");
     res.redirect("back");
@@ -72,7 +75,7 @@ module.exports.changeMulti = async (req, res) => {
       case "active":
         await Product.updateMany(
           { _id: { $in: listID } },
-          { status: actionType }
+          { status: actionType, updatedAt: Date.now() }
         );
         req.flash(
           "messageSuccess",
@@ -82,7 +85,7 @@ module.exports.changeMulti = async (req, res) => {
       case "inactive":
         await Product.updateMany(
           { _id: { $in: listID } },
-          { status: actionType }
+          { status: actionType, updatedAt: Date.now() }
         );
         req.flash(
           "messageSuccess",
@@ -106,6 +109,7 @@ module.exports.delete = async (req, res) => {
   try {
     const id = req.params.id;
     await Product.updateOne({ _id: id }, { deleted: true });
+    req.flash("messageSuccess", `Xóa sản phẩm thành công`);
     res.redirect("back");
   } catch (error) {
     console.log(error);
@@ -157,6 +161,7 @@ module.exports.restore = async (req, res) => {
   try {
     const id = req.params.id;
     await Product.updateOne({ _id: id }, { deleted: false });
+    req.flash("messageSuccess", `Khôi phục sản phẩm thành công`);
     res.redirect("back");
   } catch (error) {
     console.log(error);
@@ -167,8 +172,54 @@ module.exports.deleteTrash = async (req, res) => {
   try {
     const id = req.params.id;
     await Product.deleteOne({ _id: id });
+    req.flash("messageSuccess", `Xóa sản phẩm thành công`);
     res.redirect("back");
   } catch (error) {
     console.log(error);
   }
+};
+
+module.exports.create = (req, res) => {
+  res.render("admin/pages/product/create.pug", {
+    pageTitle: "Thêm Sản phẩm",
+  });
+};
+
+module.exports.createPOST = async (req, res) => {
+  try {
+    req.body.price = parseFloat(req.body.price);
+    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.thumbnail = `/uploads/${req.file.filename}`;
+    if (req.body.position) {
+      req.body.position = parseInt(req.body.position);
+    } else {
+      req.body.position =
+        (await Product.countDocuments({ deleted: false })) + 1;
+    }
+    const record = new Product(req.body);
+    await record.save();
+    req.flash("messageSuccess", "Thêm sản phẩm thành công");
+    res.redirect("/administrator/products");
+  } catch (error) {}
+};
+
+module.exports.detail = async (req, res) => {
+  try {
+    const record = await Product.findOne({ _id: req.params.id });
+    res.render("admin/pages/product/detail.pug", {
+      pageTitle: record.title,
+      product: record,
+    });
+  } catch (error) {}
+};
+
+module.exports.edit = async (req, res) => {
+  try {
+    const record = await Product.findOne({ _id: req.params.id });
+    res.render("admin/pages/product/edit.pug", {
+      pageTitle: record.title,
+      product: record,
+    });
+  } catch (error) {}
 };

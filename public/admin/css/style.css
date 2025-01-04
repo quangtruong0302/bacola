@@ -28,9 +28,15 @@ header .logo-admin {
 header .logo-admin a {
   color: black;
   font-weight: bold;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 header .logo-admin a span {
   padding: 0 10px;
+}
+header .logo-admin img {
+  width: 35px;
 }
 header .page-title {
   width: 65%;
@@ -226,4 +232,22 @@ nav.pagination {
   top: 10px;
   right: 10px;
   min-width: 400px;
+}
+
+.detail {
+  padding-top: 50px;
+  background-color: white;
+  height: 100vh;
+}
+.detail .price {
+  font-size: 1.5rem;
+}
+.detail .discount {
+  font-size: 1.25rem;
+}
+.detail img {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: #fff;
 }/*# sourceMappingURL=style.css.map */

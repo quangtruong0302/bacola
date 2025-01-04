@@ -1,0 +1,47 @@
+
+extends ../../layouts/default.pug
+
+block main
+    .container.mt-5
+      form(action method="POST")
+        .mb-3
+          label(for="title" class="form-label") Tiêu đề sản phẩm
+          input#title.form-control(type="text" name="title" placeholder="Nhập tiêu đề sản phẩm" value=product.title)
+        .mb-3
+          label(for="description" class="form-label") Mô tả sản phẩm
+          textarea#description.form-control(name="description" placeholder="Nhập mô tả sản phẩm" rows="4") #{product.description}
+        .row
+          .col-md-3.mb-3
+            label(for="price" class="form-label") Giá sản phẩm ($)
+            input#price.form-control(type="number" name="price" placeholder="Nhập giá sản phẩm" min="0" value=product.price step="0.01")
+          .col-md-3.mb-3
+            label(for="discountPercentage" class="form-label") Phần trăm giảm giá (%)
+            input#discountPercentage.form-control(type="number" name="discountPercentage" placeholder="Nhập tỷ lệ giảm giá" min="0" max="100" value=product.discountPercentage step="0.01")
+          .col-md-3.mb-3
+            label(for="stock" class="form-label") Số lượng trong kho
+            input#stock.form-control(type="number" name="stock" placeholder="Nhập số lượng sản phẩm trong kho" min="0" value=product.stock)
+          .col-md-3.mb-3
+            label(for="position" class="form-label") Vị trí (Tự động tăng)
+            input#position.form-control(type="number" name="position" placeholder="Tự động tăng" value=product.position)
+        .mb-3
+          label(for="thumbnail" class="form-label") Hình ảnh sản phẩm
+          input#thumbnail.form-control(type="text" name="thumbnail")
+        .mb-3
+            label(class="form-label") Trạng thái
+            - if (product.status == "active") 
+                .form-check
+                    input#statusActive.form-check-input(type="radio" name="status" value="active" checked)
+                    label(for="statusActive" class="form-check-label") Hoạt động
+                .form-check
+                    input#statusInactive.form-check-input(type="radio" name="status" value="inactive")
+                    label(for="statusInactive" class="form-check-label") Không hoạt động
+            - if (product.status == "inactive")
+                .form-check
+                    input#statusActive.form-check-input(type="radio" name="status" value="active")
+                    label(for="statusActive" class="form-check-label") Hoạt động
+                .form-check
+                    input#statusInactive.form-check-input(type="radio" name="status" value="inactive" checked)
+                    label(for="statusInactive" class="form-check-label") Không hoạt động
+        button.btn.btn-primary(type="submit")
+          i.fas.fa-save.mr-2
+          | Cập nhật

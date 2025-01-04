@@ -1,0 +1,30 @@
+extends ../../layouts/default.pug
+
+block main
+    .detail 
+        .container
+            .row
+                .col
+                    h2.text-primary Chi tiết sản phẩm
+            .row.mt-4
+                .col-md-5
+                    img.img-fluid(src=product.thumbnail, alt=product.title)
+                .col-md-7
+                    h2.text-primary #{product.title}
+                    p.price.text-danger.font-weight-bold Giá ($): $#{product.price}
+                    p.discount.text-success.font-weight-bold Giảm giá (%): #{product.discountPercentage}%
+                    p.quantity.font-weight-bold Số lượng: #{product.stock}
+                    p.location.font-weight-bold Vị trí: #{product.position}
+                    p.creation-date.font-italic Ngày tạo: 01/01/2025
+                    p.creator Người tạo: Nguyễn Văn A
+                    p.update-date.font-italic Ngày cập nhật gần nhất: 03/01/2025
+                    p.updater Người cập nhật: Trần Văn B
+                    - if (product.status == "active")
+                        p.status.font-weight-bold.text-success Trạng thái: Hoạt động
+                    - if (product.status == "inactive")
+                        p.status.font-weight-bold.text-danger Trạng thái: Không hoạt động
+                    a.btn.btn-primary.mt-3(onclick="editProduct()") Chỉnh sửa
+            .row.mt-4
+                .col-md-12
+                    h3.text-secondary Mô tả sản phẩm
+                    p #{product.description}

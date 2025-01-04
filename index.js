@@ -22,6 +22,9 @@ app.use(cookieParser("bacola"));
 app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 
+const moment = require("moment");
+app.locals.moment = moment;
+
 Router(app);
 
 app.listen(process.env.PORT, () => {
