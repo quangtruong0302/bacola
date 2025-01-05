@@ -1,30 +1,81 @@
 extends ../../layouts/default.pug
 
 block main
-    .detail 
-        .container
-            .row
-                .col
-                    h2.text-secondary Chi tiết sản phẩm
-            .row.mt-4
-                .col-md-5
-                    img.img-fluid(src=product.thumbnail, alt=product.title)
-                .col-md-7
-                    h3.text-primary #{product.title}
-                    p.price.text-danger.font-weight-bold Giá ($): $#{product.price}
-                    p.discount.text-success.font-weight-bold Giảm giá (%): #{product.discountPercentage}%
-                    p.quantity.font-weight-bold Số lượng: #{product.stock}
-                    p.location.font-weight-bold Vị trí: #{product.position}
-                    p.creation-date.font-italic Ngày giờ tạo: #{moment(product.createdAt).format("HH:mm:ss - DD/MM/YYYY")}
-                    p.creator Người tạo: Nguyễn Văn A
-                    p.update-date.font-italic Ngày giờ cập nhật gần nhất: #{moment(product.updatedAt).format("HH:mm:ss - DD/MM/YYYY")}
-                    p.updater Người cập nhật: Trần Văn B
+    .detail.pd-70px 
+            //- .row
+            //-     .col-6
+            //-         h2.text-secondary 
+                b Chi tiết sản phẩm
+            //-     .col-6
+            .row.mb-3
+                .col-4
+                    h4.mb-3  
+                        b.text-secondary Hình ảnh sản phẩm
+                    img.img-fluid.mb-3(src=product.thumbnail, alt=product.title)
+                    .row 
+                        .col-3
+                            img.img-fluid(src=product.thumbnail, alt=product.title)
+                        .col-3
+                            img.img-fluid(src=product.thumbnail, alt=product.title)
+                        .col-3
+                            img.img-fluid(src=product.thumbnail, alt=product.title)
+                        .col-3
+                            img.img-fluid(src=product.thumbnail, alt=product.title)
+                .col-4
+                    h4.mb-3 
+                        b.text-secondary Thông tin sản phẩm
+                    p 
+                        b Tiêu đề sản phẩm: 
+                        span 
+                        b.text-success #{product.title}
+                    p 
+                        b Giá sản phẩm: 
+                        span $#{product.price}
+                    p 
+                        b Phần trăm giảm giá: 
+                        span #{product.discountPercentage}%
+                    p 
+                        b Giá sau khi giảm: 
+                        span $#{product.price - product.price * product.discountPercentage / 100}
+                    p 
+                        b Số lượng sẵn có trong kho: 
+                        span  #{product.stock}
+                    p 
+                        b Vị trí sản phẩm: 
+                        span  #{product.position}
+                    p 
+                        b Sản phẩm nổi bật: 
+                        span 
+                        span.text-danger Không
                     - if (product.status == "active")
-                        p.status.font-weight-bold.text-success Trạng thái: Hoạt động
+                        p.status.text-success 
+                            b Trạng thái: 
+                            span Hoạt động
                     - if (product.status == "inactive")
-                        p.status.font-weight-bold.text-danger Trạng thái: Không hoạt động
-                    a.btn.btn-primary.mt-3(href=`/administrator/products/edit/${product._id}`) Chỉnh sửa
+                        p.status.text-danger 
+                            b Trạng thái: 
+                            span Không hoạt động
+                    a.btn.btn-primary(href=`/administrator/products/edit/${product._id}`)
+                        i.fa-regular.fa-pen-to-square  
+                        span.mgl-10px Chỉnh sửa thông tin
+                .col-4
+                    h4.mb-3 
+                        b.text-secondary Nhật ký sản phẩm
+                    p 
+                        b Ngày và giờ tạo: 
+                        span #{moment(product.createdAt).format("HH:mm:ss - DD/MM/YYYY")}
+                    p 
+                        b Người tạo: 
+                        span Nguyễn Văn A
+                    p 
+                        b Ngày và giờ cập nhật gần nhất: 
+                        span #{moment(product.updatedAt).format("HH:mm:ss - DD/MM/YYYY")}
+                    p 
+                        b Người cập nhật gần nhất: 
+                        span Trần Văn B
+    
             .row.mt-4
                 .col-md-12
-                    h2.text-secondary Mô tả sản phẩm
+                    h4.text-secondary 
+                        b Mô tả sản phẩm
                     p !{product.description}
