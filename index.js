@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 const Router = require("./routes/index.route");
 require("dotenv").config();
+const { nanoid } = require("nanoid");
 
 const Database = require("./config/database");
 Database.connect();
