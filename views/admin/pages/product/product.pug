@@ -19,7 +19,7 @@ block main
     - if (messages.messageSuccess)
         +form-alert-success(messages.messageSuccess)
     - if (messages.messageError)
-        +form-alert-success(messages.messageError)
+        +form-alert-error(messages.messageError)
     .main-table 
         table.table.table-bordered(checkbox-multi)
             thead
@@ -46,25 +46,20 @@ block main
                                 input(type="checkbox" name="id" value=product._id)
                         td #{index + 1}
                         td.td-title #{product.title}
-                        td.td-image
-                            img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
+                        - if (product.thumbnail == "/uploads/loading.png")
+                            td.td-image
+                                img.img-rotate(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px" style="padding: 30px")
+                        - else 
+                            td.td-image
+                                img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
                         td $#{product.price}
                         td #{product.discountPercentage}%
                         td #{product.stock}
                         td #{product.position}
-                        td 
-                            span #{moment(product.createdAt).format("HH:mm:ss")}
-                            br
+                        td
                             span #{moment(product.createdAt).format("DD/MM/YYYY")}
-                            br 
-                            span Bùi Quang Trưởng
-                        td 
-                            span #{moment(product.updatedAt).format("HH:mm:ss")}
-                            br
-                            span #{moment(product.updatedAt).format("DD/MM/YYYY")}
-                            br 
-                            span Bùi Quang Trưởng
-                             
+                        td
+                            span #{moment(product.updatedAt).format("DD/MM/YYYY")}                           
                         td 
                             -if(product.status=="active")
                                 button.btn.btn-success(button-change-status data-status=`${product.status}` data-id=`${product._id}`)

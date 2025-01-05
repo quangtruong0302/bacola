@@ -177,3 +177,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2000);
   }
 });
+
+// Xử lí prewiew upload ảnh
+const thumbnailInput = document.querySelector("#thumbnail");
+const imgPreview = document.querySelector("#img-preview");
+if (thumbnailInput && imgPreview) {
+  thumbnailInput.onchange = (e) => {
+    const [file] = thumbnailInput.files;
+    imgPreview.src = URL.createObjectURL(file);
+  };
+}

@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 const Router = require("./routes/index.route");
 require("dotenv").config();
 
@@ -24,6 +25,11 @@ app.use(flash());
 
 const moment = require("moment");
 app.locals.moment = moment;
+
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
 
 Router(app);
 

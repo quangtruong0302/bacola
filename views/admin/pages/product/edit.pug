@@ -1,15 +1,24 @@
 
 extends ../../layouts/default.pug
+include ../../mixins/form-alert.pug
 
 block main
-    .container.mt-5
-      form(action method="POST")
+    - if (messages.messageError)
+        +form-alert-error(messages.messageError)
+    - if (messages.messageSuccess)
+        +form-alert-success(messages.messageSuccess)
+    #create-product
+      form(action=`/administrator/products/edit/${product._id}?_method=PATCH` method="POST" enctype="multipart/form-data")
         .mb-3
-          label(for="title" class="form-label") Tiêu đề sản phẩm
+          label(for="title" class="form-label") 
+            | Tiêu đề sản phẩm 
+            span (
+              span.star *
+            span )  
           input#title.form-control(type="text" name="title" placeholder="Nhập tiêu đề sản phẩm" value=product.title)
         .mb-3
           label(for="description" class="form-label") Mô tả sản phẩm
-          textarea#description.form-control(name="description" placeholder="Nhập mô tả sản phẩm" rows="4") #{product.description}
+          textarea#description.form-control.textarea-mce(name="description" placeholder="Nhập mô tả sản phẩm" rows="4") #{product.description}
         .row
           .col-md-3.mb-3
             label(for="price" class="form-label") Giá sản phẩm ($)
@@ -24,24 +33,18 @@ block main
             label(for="position" class="form-label") Vị trí (Tự động tăng)
             input#position.form-control(type="number" name="position" placeholder="Tự động tăng" value=product.position)
         .mb-3
-          label(for="thumbnail" class="form-label") Hình ảnh sản phẩm
-          input#thumbnail.form-control(type="text" name="thumbnail")
-        .mb-3
             label(class="form-label") Trạng thái
-            - if (product.status == "active") 
-                .form-check
-                    input#statusActive.form-check-input(type="radio" name="status" value="active" checked)
-                    label(for="statusActive" class="form-check-label") Hoạt động
-                .form-check
-                    input#statusInactive.form-check-input(type="radio" name="status" value="inactive")
-                    label(for="statusInactive" class="form-check-label") Không hoạt động
-            - if (product.status == "inactive")
-                .form-check
-                    input#statusActive.form-check-input(type="radio" name="status" value="active")
-                    label(for="statusActive" class="form-check-label") Hoạt động
-                .form-check
-                    input#statusInactive.form-check-input(type="radio" name="status" value="inactive" checked)
-                    label(for="statusInactive" class="form-check-label") Không hoạt động
+              .form-check
+                  input#statusActive.form-check-input(type="radio" name="status" value="active" checked=product.status == "active")
+                  label.text-success(for="statusActive" class="form-check-label") Hoạt động
+              .form-check
+                  input#statusInactive.form-check-input(type="radio" name="status" value="inactive" checked=product.status == "inactive")
+                  label.text-danger(for="statusInactive" class="form-check-label") Không hoạt động
+        .mb-3
+          label.mgr-10px(for="thumbnail" class="form-label") Hình ảnh sản phẩm
+          input#thumbnail(type="file" name="thumbnail" accept="image/*")
+          br
+          img#img-preview(src=product.thumbnail, alt=product.title)
         button.btn.btn-primary(type="submit")
           i.fas.fa-save.mr-2
           | Cập nhật

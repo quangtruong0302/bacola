@@ -2,7 +2,6 @@ const Product = require("../../models/product.model");
 const searchHelper = require("../../helpers/search.helper");
 const paginationHelper = require("../../helpers/pagination.helper");
 
-// [GET] administrator/products
 module.exports.product = async (req, res) => {
   try {
     const find = {
@@ -44,11 +43,10 @@ module.exports.product = async (req, res) => {
       countTrash: countTrash,
     });
   } catch (error) {
-    console.log(error);
+    res.redirect("/administrator/products");
   }
 };
 
-// [PATCH] administrator/products/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
   try {
     if (req.params.status && req.params.id) {
@@ -66,7 +64,6 @@ module.exports.changeStatus = async (req, res) => {
   }
 };
 
-// [PATCH] /administrator/products/change-multi
 module.exports.changeMulti = async (req, res) => {
   try {
     const listID = req.body["list-id"].split(", ");
@@ -181,7 +178,7 @@ module.exports.deleteTrash = async (req, res) => {
 
 module.exports.create = (req, res) => {
   res.render("admin/pages/product/create.pug", {
-    pageTitle: "Thêm Sản phẩm",
+    pageTitle: "Thêm sản phẩm",
   });
 };
 
@@ -190,7 +187,11 @@ module.exports.createPOST = async (req, res) => {
     req.body.price = parseFloat(req.body.price);
     req.body.discountPercentage = parseFloat(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
+    if (req.file) {
+      req.body.thumbnail = `/uploads/${req.file.filename}`;
+    } else {
+      req.body.thumbnail = `/uploads/loading.png`;
+    }
     if (req.body.position) {
       req.body.position = parseInt(req.body.position);
     } else {
@@ -221,5 +222,27 @@ module.exports.edit = async (req, res) => {
       pageTitle: record.title,
       product: record,
     });
-  } catch (error) {}
+  } catch (error) {
+    req.flash("messageError", "Đã xãy ra lỗi, vui lòng thử lại");
+    res.redirect("/administrator/products");
+  }
+};
+
+module.exports.editPATCH = async (req, res) => {
+  try {
+    req.body.price = parseFloat(req.body.price);
+    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.position = parseInt(req.body.position);
+    req.body.updatedAt = Date.now();
+    if (req.file) {
+      req.body.thumbnail = `/uploads/${req.file.filename}`;
+    }
+    await Product.updateOne({ _id: req.params.id }, { ...req.body });
+    req.flash("messageSuccess", "Cập nhật thông tin sản phẩm thành công");
+    res.redirect("back");
+  } catch (error) {
+    req.flash("messageError", "Đã xãy ra lỗi, vui lòng thử lại");
+    res.redirect("back");
+  }
 };

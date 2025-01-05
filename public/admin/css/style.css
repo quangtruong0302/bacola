@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   font-family: "Arial", sans-serif;
   background-color: #eee;
@@ -177,6 +178,10 @@ header .header-right ul .setting .red-dot {
 #main .main-table td.td-image {
   width: 100px;
   padding: 0;
+  overflow: hidden;
+}
+#main .main-table td.td-image .img-rotate {
+  animation: spin 3s linear infinite; /* Quay liên tục */
 }
 #main .main-table th.check-box {
   min-width: 43px;
@@ -238,6 +243,7 @@ nav.pagination {
   padding-top: 50px;
   background-color: white;
   height: 100vh;
+  overflow-y: auto;
 }
 .detail .price {
   font-size: 1.5rem;
@@ -250,4 +256,37 @@ nav.pagination {
   border-radius: 5px;
   padding: 5px;
   background-color: #fff;
+}
+
+#img-preview {
+  width: 140px;
+  margin-top: 25px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+span.star {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+#create-product {
+  height: 100vh;
+  overflow-y: auto;
+  background-color: white;
+  padding: 20px;
+}
+#create-product label {
+  font-weight: bold;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.pd-70px {
+  padding: 70px;
 }/*# sourceMappingURL=style.css.map */
