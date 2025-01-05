@@ -34,7 +34,7 @@ app.use(
 Router(app);
 
 module.exports = app;
-app.listen(process.env.PORT, () => {
-  console.log(`Application runing on Port: ${process.env.PORT}`);
-  console.log(`Link: http://localhost:${process.env.PORT}`);
-});
+// app.listen(process.env.PORT, () => {
+//   console.log(`Application runing on Port: ${process.env.PORT}`);
+//   console.log(`Link: http://localhost:${process.env.PORT}`);
+// });
