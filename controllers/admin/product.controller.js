@@ -7,6 +7,7 @@ module.exports.product = async (req, res) => {
     const find = {
       deleted: false,
     };
+
     if (req.query.status) {
       if (req.query.status == "active") {
         find.status = "active";
@@ -20,6 +21,7 @@ module.exports.product = async (req, res) => {
     if (objSearch.regex) {
       find.title = objSearch.regex;
     }
+
     const countProduct = await Product.countDocuments(find);
     const objPagination = paginationHelper(
       {
@@ -29,11 +31,20 @@ module.exports.product = async (req, res) => {
       countProduct,
       req.query
     );
+    const sort = {};
+    if (req.query["sort-key"] && req.query["sort-value"]) {
+      let sortKey = req.query["sort-key"];
+      let sortValue = req.query["sort-value"];
+      sort[sortKey] = sortValue;
+    }
+
+    // Destructuring đúng cách từ đối tượng
+    const [sortKey, sortValue] = Object.entries(sort)[0] || []; // Lấy cặp key-value đầu tiên nếu có
     const countTrash = await Product.countDocuments({ deleted: true });
     const records = await Product.find(find)
       .limit(objPagination.limitItems)
       .skip(objPagination.skip)
-      .sort({ position: "desc" });
+      .sort(sort);
 
     res.render("admin/pages/product/product.pug", {
       pageTitle: "Quản lý Sản phẩm",
@@ -41,9 +52,11 @@ module.exports.product = async (req, res) => {
       search: req.query.search,
       pagination: objPagination,
       countTrash: countTrash,
+      sortKey: sortKey,
+      sortValue: sortValue,
     });
   } catch (error) {
-    res.redirect("/administrator/products");
+    res.redirect("/");
   }
 };
 
@@ -187,9 +200,7 @@ module.exports.createPOST = async (req, res) => {
     req.body.price = parseFloat(req.body.price);
     req.body.discountPercentage = parseFloat(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
-    if (req.file) {
-      req.body.thumbnail = `/uploads/${req.file.filename}`;
-    } else {
+    if (!req.file) {
       req.body.thumbnail = `/uploads/loading.png`;
     }
     if (req.body.position) {

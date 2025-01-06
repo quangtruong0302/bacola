@@ -187,3 +187,13 @@ if (thumbnailInput && imgPreview) {
     imgPreview.src = URL.createObjectURL(file);
   };
 }
+
+// const formSort = document.querySelector("[form-sort]");
+// if (formSort) {
+//   console.log(formSort);
+//   let url = new URL(window.location.href);
+//   formSort.addEventListener("submit", (e) => {
+//     // url.searchParams.set("so", status);
+//     // window.location.href = url.href;
+//   });
+// }

@@ -4,10 +4,23 @@ const controller = require("../../controllers/admin/product.controller");
 
 const validate = require("../../validates/product.validate");
 
-// Upload image to local
+// Upload image
 const multer = require("multer");
-const storage = require("../../helpers/storageMulter.helper");
-const upload = multer({ storage: storage() });
+
+// Upload image to folder uploads (local)
+// const storage = require("../../helpers/storageMulter.helper");
+// const upload = multer({ storage: storage() });
+
+// Upload image to cloudinary
+const upload = multer();
+const cloudinary = require("cloudinary").v2;
+const uploadImageToCloudinary = require("../../middlewares/admin/uploadImageToCloudinary.helper");
+
+cloudinary.config({
+  cloud_name: "dqo9guoih",
+  api_key: "885332919922856",
+  api_secret: "CiqV-hp41tAtFdeAKSkDY7ujUmc",
+});
 
 router.get("/", controller.product);
 router.patch("/change-status/:status/:id", controller.changeStatus);
@@ -20,6 +33,7 @@ router.get("/create", controller.create);
 router.post(
   "/create",
   upload.single("thumbnail"),
+  uploadImageToCloudinary,
   validate.validateCreate,
   controller.createPOST
 );
