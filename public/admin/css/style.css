@@ -152,6 +152,9 @@ header .header-right ul .setting .red-dot {
 #main .main-top .form-filter-change-multi-search span {
   font-size: 15px;
 }
+#main .main-top .form-filter-change-multi-search .form-search {
+  width: 313px;
+}
 #main .main-top .form-filter-change-multi-search .form-search input {
   width: 214px;
   padding: 8px 12px;

@@ -1,8 +1,8 @@
 const express = require("express");
+require("dotenv").config();
 const app = express();
 const path = require("path");
 const Router = require("./routes/index.route");
-require("dotenv").config();
 
 const Database = require("./config/database");
 Database.connect();
