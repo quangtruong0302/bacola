@@ -13,14 +13,7 @@ const multer = require("multer");
 
 // Upload image to cloudinary
 const upload = multer();
-const cloudinary = require("cloudinary").v2;
 const uploadImageToCloudinary = require("../../middlewares/admin/uploadImageToCloudinary.helper");
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
 
 router.get("/", controller.product);
 router.patch("/change-status/:status/:id", controller.changeStatus);

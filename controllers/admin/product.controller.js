@@ -36,6 +36,10 @@ module.exports.product = async (req, res) => {
       let sortKey = req.query["sort-key"];
       let sortValue = req.query["sort-value"];
       sort[sortKey] = sortValue;
+    } else {
+      let sortKey = "createdAt";
+      let sortValue = "desc";
+      sort[sortKey] = sortValue;
     }
 
     // Destructuring đúng cách từ đối tượng
