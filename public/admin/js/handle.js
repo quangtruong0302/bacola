@@ -50,16 +50,27 @@ if (pagination) {
   });
 }
 
-// Xử lí thay đổi trạng thái sản phẩm
+// Xử lí thay đổi trạng thái
 const buttonChangeSatus = document.querySelectorAll("[button-change-status]");
 if (buttonChangeSatus.length > 0) {
   const formChangeStatus = document.querySelector("[form-change-status]");
   buttonChangeSatus.forEach((button) => {
     button.addEventListener("click", () => {
       const dataId = button.getAttribute("data-id");
-      const dataStatusCurrent = button.getAttribute("data-status");
-      const dataStatus = dataStatusCurrent == "active" ? "inactive" : "active";
-      formChangeStatus.action = `/administrator/products/change-status/${dataStatus}/${dataId}?_method=PATCH`;
+      const dataName = button.getAttribute("data-name");
+      if (dataName == "product") {
+        const dataStatusCurrent = button.getAttribute("data-status");
+        const dataStatus =
+          dataStatusCurrent == "active" ? "inactive" : "active";
+        formChangeStatus.action = `/administrator/products/change-status/${dataStatus}/${dataId}?_method=PATCH`;
+      }
+      if (dataName == "category") {
+        const dataStatusCurrent = button.getAttribute("data-status");
+        const dataStatus =
+          dataStatusCurrent == "active" ? "inactive" : "active";
+        formChangeStatus.action = `/administrator/categories/change-status/${dataStatus}/${dataId}?_method=PATCH`;
+      }
+
       formChangeStatus.submit();
     });
   });
@@ -130,21 +141,31 @@ if (buttonDeleteSingle.length > 0) {
   const formDeleteSingle = document.querySelector("[form-delete-single]");
   buttonDeleteSingle.forEach((button) => {
     button.addEventListener("click", () => {
-      const isConfirm = confirm("Bạn muốn xoá sản phẩm này?");
-      if (isConfirm) {
-        const id = button.getAttribute("data-id");
-        const dataName = button.getAttribute("data-name");
-        let action = "";
-        if (dataName == "product") {
+      const dataName = button.getAttribute("data-name");
+      let action = "";
+      // Xóa sản phẩm
+      if (dataName == "product") {
+        const isConfirm = confirm("Bạn muốn xoá sản phẩm này?");
+        if (isConfirm) {
+          const id = button.getAttribute("data-id");
           action = `/administrator/products/delete/${id}?_method=PATCH`;
         }
-        if (dataName == "product-in-trash") {
+      }
+      // Xóa sản phẩm trong thùng rác
+      if (dataName == "product-in-trash") {
+        const isConfirm = confirm("Bạn muốn xoá vĩnh viễn sản phẩm này?");
+        if (isConfirm) {
+          const id = button.getAttribute("data-id");
           action = `/administrator/products/trash/delete/${id}?_method=DELETE`;
         }
-
-        formDeleteSingle.action = action;
-        formDeleteSingle.submit();
       }
+      // Xóa danh mục sản phẩm
+      if (dataName == "category") {
+        const id = button.getAttribute("data-id");
+        action = `/administrator/categories/delete/${id}?_method=PATCH`;
+      }
+      formDeleteSingle.action = action;
+      formDeleteSingle.submit();
     });
   });
 }
@@ -187,13 +208,3 @@ if (thumbnailInput && imgPreview) {
     imgPreview.src = URL.createObjectURL(file);
   };
 }
-
-// const formSort = document.querySelector("[form-sort]");
-// if (formSort) {
-//   console.log(formSort);
-//   let url = new URL(window.location.href);
-//   formSort.addEventListener("submit", (e) => {
-//     // url.searchParams.set("so", status);
-//     // window.location.href = url.href;
-//   });
-// }

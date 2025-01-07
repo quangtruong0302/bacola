@@ -41,7 +41,6 @@ module.exports.product = async (req, res) => {
       let sortValue = "desc";
       sort[sortKey] = sortValue;
     }
-
     // Destructuring đúng cách từ đối tượng
     const [sortKey, sortValue] = Object.entries(sort)[0] || []; // Lấy cặp key-value đầu tiên nếu có
     const countTrash = await Product.countDocuments({ deleted: true });
@@ -51,7 +50,7 @@ module.exports.product = async (req, res) => {
       .sort(sort);
 
     res.render("admin/pages/product/product.pug", {
-      pageTitle: "Quản lý Sản phẩm",
+      pageTitle: "Danh sách sản phẩm",
       products: records,
       search: req.query.search,
       pagination: objPagination,

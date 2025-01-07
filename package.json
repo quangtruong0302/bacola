@@ -29,6 +29,7 @@
     "tinymce": "^7.6.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "open": "^10.1.0"
   }
 }
