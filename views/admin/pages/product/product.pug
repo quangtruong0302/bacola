@@ -7,6 +7,7 @@ include ../../mixins/form-add.pug
 include ../../mixins/form-trash.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-alert.pug
+include ../../mixins/form-select-tree.pug
 
 block main 
     .main-top
@@ -26,7 +27,7 @@ block main
                 .card-header
                     | Tiêu chí sắp xếp
                 .card-body.d-flex.align-items-center
-                    form.d-flex.align-items-center.mgr-10px()
+                    form.d-flex.align-items-center.mgr-10px(form-sort)
                         select.custom-select.mgr-10px(name="sort-key")
                             option(selected, disabled) Chọn tiêu chí sắp xếp
                             option(value='title', selected=sortKey == 'title') Tiêu đề
@@ -40,21 +41,30 @@ block main
                             option(value='desc', selected=sortValue == 'desc') Giảm dần
                         button.btn.btn-success.mg-0px(type="submit")
                             i.fa-solid.fa-sort 
+                          
             .card.form-filter.mb-10px.mgr-10px
                 .card-header
                     | Danh mục
                 .card-body.d-flex.align-items-center
-                    form.d-flex.align-items-center.mgr-10px()
-                        select.custom-select.mgr-10px(name="sort-key")
-                            option(selected, disabled) Chọn danh mục
-                            option(value='title' ) Tiêu đề
-                            option(value='price') Giá
-                            option(value='position') Vị trí
-                            option(value='createdAt') Ngày và giờ tạo
-                            option(value='updatedAt') Ngày và giờ cập nhật gần nhất
-                        button.btn.btn-success.mg-0px(type="submit")
-                            i.fa-solid.fa-sort 
+                    form.d-flex.align-items-center.mgr-10px(form-category)
+                        select.custom-select.form-control.mr-2(name="category" onchange="submitForm()")
+                            - if (category)
+                                option(selected="selected" value="" disabled) #{category.title} (#{countProduct})
+                                option(value="all") Tất cả danh mục
+                            - else 
+                                option(selected="selected" value="" disabled) Tất cả danh mục (#{countProduct})
+                            if (categories.length > 0) 
+                                +form-select-tree(categories)
+                                        button.btn.btn-success.mg-0px(type="submit")
+                                            i.fa-solid.fa-sort 
+                        button.btn.btn-primary.mg-0px(type="submit")
+                            i.fas.fa-search
+                           
+                        
         table.table.table-bordered(checkbox-multi)
+            thead 
+                tr
+                    th(colspan="13").text-center DANH SÁCH SẢN PHẨM      
             thead
                 tr
                     th.check-box
@@ -63,51 +73,57 @@ block main
                     th(scope='col') STT
                     th(scope='col') Tên sản phẩm
                     th(scope='col') Hình ảnh
+                    th(scope='col') Danh mục
                     th(scope='col') Giá($)
                     th(scope='col') Giảm giá (%)
                     th(scope='col') Số lượng
                     th(scope='col') Vị trí
                     th(scope='col') Ngày tạo
-                    th(scope='col') Ngày chỉnh sửa
+                    //- th(scope='col') Ngày sửa
                     th(scope='col') Trạng thái
                     th(scope='col') Hành động
             tbody
-                each product, index in products
+                - if (products.length > 0)
+                    each product, index in products
+                        tr
+                            td.check-box
+                                label
+                                    input(type="checkbox" name="id" value=product._id)
+                            td #{pagination.limitItems * (pagination.currentPage - 1) + (index + 1)}
+                            td.td-title #{product.title}
+                            - if (product.thumbnail == "/uploads/loading.png")
+                                td.td-image
+                                    img.img-rotate(src="/uploads/loading.png" alt=product.title width="100px" style="padding: 30px")
+                            - else 
+                                td.td-image
+                                    img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
+                            td #{product.categoryTitle}
+                            td $#{product.price}
+                            td #{product.discountPercentage}%
+                            td #{product.stock}
+                            td #{product.position}
+                            td
+                                span #{moment(product.createdAt).format("DD/MM/YYYY")}
+                            //- td
+                            //-     span #{moment(product.updatedAt).format("DD/MM/YYYY")}                           
+                            td 
+                                -if(product.status=="active")
+                                    button.btn.btn-success(button-change-status data-status=`${product.status}` data-id=`${product._id}` data-name="product")
+                                        i.fa-solid.fa-check
+                                -if(product.status=="inactive")
+                                    button.btn.btn-danger(button-change-status data-status=`${product.status}` data-id=`${product._id}` data-name="product")
+                                        i.fa-solid.fa-ban
+                            td
+                                a.btn.btn-success.mgr-10px.mb-10px(href=`/administrator/products/detail/${product._id}`)
+                                    i.fa-solid.fa-circle-info
+                                a.btn.btn-primary.mgr-10px.mb-10px(href=`/administrator/products/edit/${product._id}`)
+                                    i.fa-regular.fa-pen-to-square
+                                button.btn.btn-danger.mb-10px(type="button" data-id=product._id data-name="product" button-delete-single)
+                                    i.fa-solid.fa-delete-left
+                - else  
                     tr
-                        td.check-box
-                            label
-                                input(type="checkbox" name="id" value=product._id)
-                        td #{index + 1}
-                        td.td-title #{product.title}
-                        - if (product.thumbnail == "/uploads/loading.png")
-                            td.td-image
-                                img.img-rotate(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px" style="padding: 30px")
-                        - else 
-                            td.td-image
-                                img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
-                        td $#{product.price}
-                        td #{product.discountPercentage}%
-                        td #{product.stock}
-                        td #{product.position}
-                        td
-                            span #{moment(product.createdAt).format("DD/MM/YYYY")}
-                        td
-                            span #{moment(product.updatedAt).format("DD/MM/YYYY")}                           
-                        td 
-                            -if(product.status=="active")
-                                button.btn.btn-success(button-change-status data-status=`${product.status}` data-id=`${product._id}` data-name="product")
-                            -if(product.status=="inactive")
-                                button.btn.btn-danger(button-change-status data-status=`${product.status}` data-id=`${product._id}` data-name="product")
-                                    i.fa-solid.fa-ban
-                        td
-                            a.btn.btn-success.mgr-10px(href=`/administrator/products/detail/${product._id}`)
-                                i.fa-solid.fa-circle-info
-                            a.btn.btn-primary.mgr-10px(href=`/administrator/products/edit/${product._id}`)
-                                i.fa-regular.fa-pen-to-square
-                            button.btn.btn-danger(type="button" data-id=product._id data-name="product" button-delete-single)
-                                i.fa-solid.fa-delete-left
-                                
-    +pagination(pagination)      
+                        td(colspan="13").text-center Không tìm thấy sản phẩm phù hợp            
+        +pagination(pagination)      
     form(action="" method="POST" form-change-status).d-none     
     form(action="" method="POST" form-delete-single).d-none      
     

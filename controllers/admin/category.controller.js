@@ -1,4 +1,7 @@
 const Category = require("../../models/category.model");
+const createTreeHelper = require("../../helpers/createTree.helper");
+const paginationHelper = require("../../helpers/pagination.helper");
+const Product = require("../../models/product.model");
 module.exports.category = async (req, res) => {
   const find = {
     deleted: false,
@@ -11,6 +14,15 @@ module.exports.category = async (req, res) => {
       find.status = "inactive";
     }
   }
+  const countCategory = await Category.countDocuments(find);
+  const objPagination = paginationHelper(
+    {
+      currentPage: 1,
+      limitItems: 6,
+    },
+    countCategory,
+    req.query
+  );
   const sort = {};
   if (req.query["sort-key"] && req.query["sort-value"]) {
     let sortKey = req.query["sort-key"];
@@ -21,19 +33,46 @@ module.exports.category = async (req, res) => {
     let sortValue = "desc";
     sort[sortKey] = sortValue;
   }
-  // Destructuring đúng cách từ đối tượng
-  const [sortKey, sortValue] = Object.entries(sort)[0] || []; // Lấy cặp key-value đầu tiên nếu có
-  const records = await Category.find(find).sort(sort);
+  const [sortKey, sortValue] = Object.entries(sort)[0] || [];
+  const records = await Category.find(find)
+    .sort(sort)
+    .limit(objPagination.limitItems)
+    .skip(objPagination.skip);
+
+  for (const category of records) {
+    if (category.parentID != "") {
+      const parentCaterory = await Category.findOne({
+        _id: category.parentID,
+      });
+      if (parentCaterory) {
+        category.parentTitle = parentCaterory.title;
+      }
+    }
+    const countProduct = await Product.countDocuments({
+      category: category.id,
+    });
+    if (countProduct) {
+      category.countProduct = countProduct;
+    }
+  }
   res.render("admin/pages/category/category.pug", {
     pageTitle: "Danh mục sản phẩm",
     categories: records,
+    pagination: objPagination,
     sortKey: sortKey,
     sortValue: sortValue,
   });
 };
 module.exports.create = async (req, res) => {
+  const find = {
+    deleted: false,
+    status: "active",
+  };
+  const records = await Category.find(find);
+  const newRecords = createTreeHelper.tree(records);
   res.render("admin/pages/category/create.pug", {
     pageTitle: "Thêm danh mục",
+    categories: newRecords,
   });
 };
 
@@ -69,5 +108,30 @@ module.exports.changeStatus = async (req, res) => {
     res.redirect("back");
   } catch (error) {
     req.flash("messageError", "Cập nhật trạng thái thất bại");
+  }
+};
+
+module.exports.edit = async (req, res) => {
+  try {
+    const record = await Category.findOne({ _id: req.params.id });
+    const records = await Category.find({ deleted: false, status: "active" });
+    const newRecords = createTreeHelper.tree(records);
+    res.render("admin/pages/category/edit.pug", {
+      pageTitle: "Chỉnh sửa danh mục sản phẩm",
+      categories: newRecords,
+      category: record,
+    });
+  } catch (error) {}
+};
+module.exports.editPATCH = async (req, res) => {
+  try {
+    req.body.updatedAt = Date.now();
+    console.log(req.body);
+    await Category.updateOne({ _id: req.params.id }, { ...req.body });
+    req.flash("messageSuccess", "Cập nhật thông tin danh mục thành công");
+    res.redirect("back");
+  } catch (error) {
+    req.flash("messageError", "Cập nhật thông tin sản phẩm thất bại");
+    res.redirect("back");
   }
 };

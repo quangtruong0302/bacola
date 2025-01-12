@@ -1,0 +1,9 @@
+
+mixin form-select-tree(items, level = 0, parentID = "")
+    each item in items
+        option(value=item._id selected=(item._id == parentID ? true : false))
+            - const prefix = Array(level).fill('---').join(' ');
+            | #{prefix} #{item.title}
+        if item.children && item.children.length > 0
+            +form-select-tree(item.children, level + 1, parentID)
+

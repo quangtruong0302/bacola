@@ -1,6 +1,7 @@
 
 extends ../../layouts/default.pug
 include ../../mixins/form-alert.pug
+include ../../mixins/form-select-tree.pug
 
 block main
     - if (messages.messageError)
@@ -14,6 +15,13 @@ block main
               span.star *
             span )  
           input#title.form-control(type="text" name="title" placeholder="Nhập tiêu đề sản phẩm" required)
+        .mb-3
+          label(for="title" class="form-label") 
+            | Danh mục sản phẩm
+          select.custom-select.form-control.mr-2(name="category")
+              option(selected="selected" disabled) Chọn danh mục
+              if (categories.length > 0) 
+                  +form-select-tree(categories, 0)
         .mb-3
           label(for="description" class="form-label") Mô tả sản phẩm
           textarea#description.form-control.textarea-mce(name="description" placeholder="Nhập mô tả sản phẩm" rows="4")

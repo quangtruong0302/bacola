@@ -1,0 +1,154 @@
+extends ../../layouts/default.pug
+include ../../mixins/form-alert.pug
+
+block main
+    - if (messages.messageSuccess)
+        +form-alert-success(messages.messageSuccess)
+
+    .main-table 
+        -if(roles.length > 0)
+            .data-roles(data=roles)
+            .text-right 
+                button.btn.btn-primary.mb-3(type="submit" button-submit-permissions) Cập nhật
+            table.table.table-hover.table(table-permissions)
+                thead
+                    tr.bg-light
+                        th.text-left Tính năng
+                        each role in roles
+                            th.text-center #{role.title}                    
+                tbody
+                    tr.d-none(data-name="id")
+                        th ID
+                        each role in roles
+                            th.text-center
+                                input(type="text" value=role._id)
+                    
+                    tr.bg-light
+                        th.text-left Sản phẩm 
+                        each role in roles
+                            th
+                    tr(data-name="view_product") 
+                        td Xem
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="create_product")  
+                        td Thêm mới
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="edit_product")  
+                        td Chỉnh sửa
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="change_status_product")  
+                        td Thay đổi trạng thái
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="delete_product")  
+                        td.text-danger Xoá
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    
+
+                    tr.bg-light
+                        th.text-left Danh mục
+                        each role in roles
+                            th
+                    tr(data-name="view_category")  
+                        td Xem
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="create_category")  
+                        td Thêm mới
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="edit_category") 
+                        td Chỉnh sửa
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="change_status_category")  
+                        td Thay đổi trạng thái
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="delete_category") 
+                        td.text-danger Xoá
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+             
+                    
+                    tr.bg-light
+                        th.text-left Nhóm quyền
+                        each role in roles
+                            th
+                    tr(data-name="view_roles")  
+                        td Xem
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="create_roles")  
+                        td Thêm mới
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="edit_roles") 
+                        td Chỉnh sửa
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="delete_roles") 
+                        td.text-danger Xoá
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                
+                    tr.bg-light
+                        th.text-left Phân quyền
+                        each role in roles
+                            th
+                    tr(data-name="permissions")  
+                        td Phân quyền
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                  
+
+                    tr.bg-light
+                        th.text-left Tài khoản
+                        each role in roles
+                            th
+                    tr(data-name="view_accounts")  
+                        td Xem
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="create_accounts")  
+                        td Thêm mới
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="edit_accounts") 
+                        td Chỉnh sửa
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="change_status_accounts")  
+                        td Thay đổi trạng thái
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+                    tr(data-name="delete_accounts") 
+                        td.text-danger Xoá
+                        each role in roles
+                            td.text-center
+                                input(type="checkbox")
+    form.d-none(action="/administrator/roles/permissions/?_method=PATCH" method="POST" form-change-permissions) 
+        input(type="text" name="permissions")  

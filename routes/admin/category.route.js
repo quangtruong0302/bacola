@@ -17,6 +17,14 @@ router.post(
   validate.validateCreate,
   controller.createPOST
 );
+router.get("/edit/:id", controller.edit);
+router.patch(
+  "/edit/:id",
+  upload.single("thumbnail"),
+  uploadImageToCloudinary,
+  validate.validateCreate,
+  controller.editPATCH
+);
 router.patch("/delete/:id", controller.delete);
 router.patch("/change-status/:status/:id", controller.changeStatus);
 

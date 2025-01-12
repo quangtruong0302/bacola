@@ -8,41 +8,40 @@ block main
     - if (messages.messageError)
         +form-alert-error(messages.messageError)
     #create-product
-      form(action="/administrator/categories/create" method="POST" enctype="multipart/form-data")
+      form(action=`/administrator/categories/edit/${category._id}?_method=PATCH` method="POST" enctype="multipart/form-data")
         .mb-3
           label(for="title" class="form-label") 
             | Tiêu đề danh mục 
             span (
               span.star *
             span )  
-          input#title.form-control(type="text" name="title" placeholder="Nhập tiêu đề danh mục" required)
+          input#title.form-control(type="text" name="title" placeholder="Nhập tiêu đề danh mục" required value=category.title)
         .mb-3
           label(for="parentID" class="form-label") 
             | Danh mục cha
           select.custom-select.form-control.mr-2(name="parentID")
               option(selected="selected" value="") Không
               if (categories.length > 0) 
-                  +form-select-tree(categories)
+                  +form-select-tree(categories, 0, category.parentID)
         .mb-3
           label(for="description" class="form-label") Mô tả danh mục
-          textarea#description.form-control.textarea-mce(name="description" placeholder="Nhập mô tả danh mục" rows="4")
+          textarea#description.form-control.textarea-mce(name="description" placeholder="Nhập mô tả danh mục" rows="4") !{category.description}
         .mb-3
             label(class="form-label") Trạng thái  
             span  (Mặc định là 
             span.text-success  Hoạt động
             span )
             .form-check
-              input#statusActive.form-check-input(type="radio" name="status" value="active" checked)
-              label.text-success(for="statusActive" class="form-check-label") Hoạt động
+              input#statusActive.form-check-input(type="radio" name="status" value="active" checked=category.status=="active" ? true : false)
+              label.text-success(for="statusActive" class="form-check-label" ) Hoạt động
             .form-check
-              input#statusInactive.form-check-input(type="radio" name="status" value="inactive")
+              input#statusInactive.form-check-input(type="radio" name="status" value="inactive" checked=category.status=="inactive" ? true : false)
               label.text-danger(for="statusInactive" class="form-check-label") Không hoạt động
         .mb-3
           label.mgr-10px(for="thumbnail" class="form-label") Hình ảnh danh mục
           input#thumbnail(type="file" name="thumbnail" accept="image/*")
           br
-          img#img-preview(src="", alt="")
-
+          img#img-preview(src=category.thumbnail, alt="")
         button.btn.btn-primary(type="submit")
-          i.fas.fa-save.mr-2
-          | Thêm danh mục 
+          i.fa-regular.fa-pen-to-square
+          span.mgl-10px Cập nhật thông tin

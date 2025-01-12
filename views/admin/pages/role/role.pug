@@ -1,0 +1,45 @@
+
+extends ../../layouts/default.pug
+include ../../mixins/form-add.pug
+include ../../mixins/form-alert.pug
+
+block main 
+    .main-top
+        .form-filter-change-multi-search.d-flex.align-items-center 
+            +form-add("Thêm nhóm quyền", "/administrator/roles/create")
+    - if (messages.messageSuccess)
+        +form-alert-success(messages.messageSuccess)
+    - if (messages.messageError)
+        +form-alert-error(messages.messageError)
+    .main-table 
+        table.table.table-bordered()
+            thead 
+                tr
+                    th(colspan="10").text-center DANH SÁCH NHÓM QUYỀN  
+            thead
+                tr
+                    th(scope='col') STT
+                    th(scope='col') Tên nhóm quyền
+                    th(scope='col' style="width:999px") Mô tả ngắn
+                    th(scope='col') Hành động
+            tbody
+                - if (roles.length > 0)
+                    each role, index in roles
+                        tr 
+                            td #{index + 1}
+                            td #{role.title}
+                            td #{role.description}
+                            td
+                                a.btn.btn-success.mgr-10px(href=`/administrator/roles/detail/${role._id}`)
+                                    i.fa-solid.fa-circle-info
+                                a.btn.btn-primary.mgr-10px(href=`/administrator/roles/edit/${role._id}`)
+                                    i.fa-regular.fa-pen-to-square
+                                button.btn.btn-danger(type="button" data-id=role._id data-name="role" button-delete-single)
+                                    i.fa-solid.fa-delete-left
+                - else 
+                    tr 
+                        td(colspan="4").text-center Chưa có nhóm quyền nào được tạo
+
+    form(action="" method="POST" form-change-status).d-none     
+    form(action="" method="POST" form-delete-single).d-none      
+    

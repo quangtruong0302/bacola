@@ -15,22 +15,6 @@ if (buttonStatus.length > 0) {
   });
 }
 
-// Xử lí tìm kiếm
-const formSearch = document.querySelector("[form-search]");
-if (formSearch) {
-  let url = new URL(window.location.href);
-  formSearch.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const keyword = e.target.elements.search.value;
-    if (keyword) {
-      url.searchParams.set("search", keyword);
-    } else {
-      url.searchParams.delete("search");
-    }
-    window.location.href = url.href;
-  });
-}
-
 // Xử lí phân trang
 const pagination = document.querySelectorAll("[button-pagination]");
 const buttonNext = document.querySelector("[button-next]");
@@ -49,6 +33,57 @@ if (pagination) {
     });
   });
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const url = new URL(window.location.href);
+
+  // Xử lý form tìm kiếm
+  const formSearch = document.querySelector("[form-search]");
+  if (formSearch) {
+    formSearch.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const keyword = e.target.elements.search.value;
+      if (keyword) {
+        url.searchParams.set("search", keyword);
+      } else {
+        url.searchParams.delete("search");
+      }
+      window.location.href = url.href;
+    });
+  }
+
+  // Xử lý form sắp xếp
+  const formSort = document.querySelector("[form-sort]");
+  if (formSort) {
+    formSort.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const sortValue = e.target.elements["sort-value"].value;
+      const sortKey = e.target.elements["sort-key"].value;
+      if (sortValue && sortKey) {
+        url.searchParams.set("sort-value", sortValue);
+        url.searchParams.set("sort-key", sortKey);
+      } else {
+        url.searchParams.delete("sort-value");
+        url.searchParams.delete("sort-key");
+      }
+      window.location.href = url.href;
+    });
+  }
+
+  // Xử lý form danh mục
+  const formCategory = document.querySelector("[form-category]");
+  if (formCategory) {
+    formCategory.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const category = e.target.elements.category.value;
+      if (category) {
+        url.searchParams.set("category", category);
+      } else {
+        url.searchParams.delete("category");
+      }
+      window.location.href = url.href;
+    });
+  }
+});
 
 // Xử lí thay đổi trạng thái
 const buttonChangeSatus = document.querySelectorAll("[button-change-status]");
@@ -135,7 +170,7 @@ if (formChangeMulti) {
   });
 }
 
-// Xử lí xoá sản phẩm
+// Xử lí xoá single
 const buttonDeleteSingle = document.querySelectorAll("[button-delete-single]");
 if (buttonDeleteSingle.length > 0) {
   const formDeleteSingle = document.querySelector("[form-delete-single]");
@@ -149,6 +184,8 @@ if (buttonDeleteSingle.length > 0) {
         if (isConfirm) {
           const id = button.getAttribute("data-id");
           action = `/administrator/products/delete/${id}?_method=PATCH`;
+          formDeleteSingle.action = action;
+          formDeleteSingle.submit();
         }
       }
       // Xóa sản phẩm trong thùng rác
@@ -157,15 +194,30 @@ if (buttonDeleteSingle.length > 0) {
         if (isConfirm) {
           const id = button.getAttribute("data-id");
           action = `/administrator/products/trash/delete/${id}?_method=DELETE`;
+          formDeleteSingle.action = action;
+          formDeleteSingle.submit();
         }
       }
       // Xóa danh mục sản phẩm
       if (dataName == "category") {
-        const id = button.getAttribute("data-id");
-        action = `/administrator/categories/delete/${id}?_method=PATCH`;
+        const isConfirm = confirm("Bạn muốn xóa danh mục này?");
+        if (isConfirm) {
+          const id = button.getAttribute("data-id");
+          action = `/administrator/categories/delete/${id}?_method=PATCH`;
+          formDeleteSingle.action = action;
+          formDeleteSingle.submit();
+        }
       }
-      formDeleteSingle.action = action;
-      formDeleteSingle.submit();
+      // Xóa nhóm quyền
+      if (dataName == "role") {
+        const isConfirm = confirm("Bạn muốn xóa nhóm quyền này?");
+        if (isConfirm) {
+          const id = button.getAttribute("data-id");
+          action = `/administrator/roles/delete/${id}?_method=PATCH`;
+          formDeleteSingle.action = action;
+          formDeleteSingle.submit();
+        }
+      }
     });
   });
 }
@@ -207,4 +259,59 @@ if (thumbnailInput && imgPreview) {
     const [file] = thumbnailInput.files;
     imgPreview.src = URL.createObjectURL(file);
   };
+}
+
+const tablePermissions = document.querySelector("[table-permissions]");
+if (tablePermissions) {
+  const buttonSubmit = document.querySelector("[button-submit-permissions]");
+
+  buttonSubmit.addEventListener("click", () => {
+    let permissions = [];
+
+    const rows = tablePermissions.querySelectorAll("tr[data-name]");
+
+    rows.forEach((row) => {
+      const name = row.getAttribute("data-name");
+      const inputs = row.querySelectorAll("input");
+      if (name == "id") {
+        inputs.forEach((input) => {
+          permissions.push({
+            id: input.value,
+            permissions: [],
+          });
+        });
+      } else {
+        inputs.forEach((input, idx) => {
+          if (input.checked) {
+            permissions[idx].permissions.push(name);
+          }
+        });
+      }
+    });
+    if (permissions.length > 0) {
+      const formChangePermissions = document.querySelector(
+        "[form-change-permissions]"
+      );
+      const input = formChangePermissions.querySelector(
+        "input[name='permissions']"
+      );
+      input.value = JSON.stringify(permissions);
+      formChangePermissions.submit();
+    }
+  });
+}
+
+const dataRoles = document.querySelector(".data-roles");
+if (dataRoles) {
+  const newData = JSON.parse(dataRoles.getAttribute("data"));
+  const tablePermissions = document.querySelector("[table-permissions]");
+
+  newData.forEach((item, index) => {
+    const permissions = item.permissions;
+    permissions.forEach((permission) => {
+      const row = tablePermissions.querySelector(`[data-name="${permission}"]`);
+      const input = row.querySelectorAll("input")[index];
+      input.checked = true;
+    });
+  });
 }
