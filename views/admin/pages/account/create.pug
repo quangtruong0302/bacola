@@ -1,0 +1,49 @@
+extends ../../layouts/default.pug
+include ../../mixins/form-alert.pug
+
+block main
+    - if (messages.messageError)
+        +form-alert-error(messages.messageError)
+    #create-product
+        form(action="/administrator/accounts/create" method="post" enctype="multipart/form-data")
+            .mb-3
+                label(for="fullName") Họ và tên
+                input#fullName.form-control(type="text" name="fullName")
+            .mb-3
+                label(for="phone") Số điện thoại
+                input#phoneNumber.form-control(type="text" name="phone")
+            .mb-3
+                label(for="email") Email
+                input#email.form-control(type="email" name="email")
+                
+            .mb-3
+                label(for="password") Mật khẩu
+                input#password.form-control(type="password" name="password")
+            .mb-3
+                label(for="confirmPassword") Nhập lại mật khẩu
+                input#password.form-control(type="password" name="confirmPassword")
+            
+            .mb-3
+                label(for="role") Quyền
+                select#role.form-control(name="role")
+                    each role in roles
+                        option(value=role._id) #{role.title}
+            .mb-3
+                label.mgr-10px(for="thumbnail" class="form-label") Ảnh đại diện
+                input#thumbnail(type="file" name="thumbnail" accept="image/*")
+                br
+                img#img-preview(src="", alt="")
+            .container-image-preview.d-none.mt-3
+                img.image-preview(src="", alt="")
+            .mb-3
+                label(class="form-label") Trạng thái  
+                span  (Mặc định là 
+                span.text-success  Hoạt động
+                span )
+                .form-check
+                    input#statusActive.form-check-input(type="radio" name="status" value="active" checked)
+                    label.text-success(for="statusActive" class="form-check-label") Hoạt động
+                .form-check
+                    input#statusInactive.form-check-input(type="radio" name="status" value="inactive")
+                    label.text-danger(for="statusInactive" class="form-check-label") Không hoạt động
+            button.btn.btn-primary(type="submit") Thêm Tài Khoản
