@@ -20,12 +20,12 @@ router.post(
   validate.validatePassword,
   controller.createPOST
 );
-
-// router.post(
-//   "/create",
-//   upload.single("thumbnail"),
-//   uploadImageToCloudinary,
-//   controller.createPOST
-// );
+router.get("/edit/:id", controller.edit);
+router.patch(
+  "/edit/:id",
+  upload.single("thumbnail"),
+  uploadImageToCloudinary,
+  controller.editPATCH
+);
 
 module.exports = router;

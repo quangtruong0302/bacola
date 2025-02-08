@@ -1,6 +1,6 @@
 header
     .logo-admin
-        a.navbar-brand(href="#")
+        a.navbar-brand(href="/administrator/dashboard")
             img(src="/admin/images/control-panel.png", alt="user")
             span Admin Panel
     .page-title 
@@ -15,8 +15,13 @@ header
                 .notification
                     i.fa-solid.fa-bell
                     .red-dot
-            li 
+            li
                 i.fa-solid.fa-list-ul
-            li 
-                .user
+            li.infor-user
+                a(href="/administrator/accounts/my-account").user
                     img(src="/admin/images/user.png", alt="user")
+            
+            li 
+                a.logout(href="/administrator/auth/logout") 
+                    i.fa-solid.fa-right-from-bracket
+                    span.mgl-5px Đăng xuất

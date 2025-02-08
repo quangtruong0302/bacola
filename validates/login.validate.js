@@ -1,23 +1,15 @@
-const Account = require("../models/account.model");
-const md5 = require("md5");
-
 module.exports.validateLogin = async (req, res, next) => {
   try {
     const email = req.body.email;
-    const account = await Account.findOne({
-      email: email,
-    });
-    if (account) {
-      const newPassword = md5(password);
-      if (account.password == newPassword) {
-        next();
-      } else {
-        req.flash("messageError", "Mật khẩu không chính xác");
-        return res.redirect("back");
-      }
-    } else {
-      req.flash("messageError", "Email vừa nhập không đúng");
+    const password = req.body.password;
+    if (!email) {
+      req.flash("messageError", "Vui lòng nhập Email");
       return res.redirect("back");
     }
+    if (!password) {
+      req.flash("messageError", "Vui lòng nhập mật khẩu");
+      return res.redirect("back");
+    }
+    next();
   } catch (error) {}
 };

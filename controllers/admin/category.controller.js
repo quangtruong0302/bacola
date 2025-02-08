@@ -2,6 +2,8 @@ const Category = require("../../models/category.model");
 const createTreeHelper = require("../../helpers/createTree.helper");
 const paginationHelper = require("../../helpers/pagination.helper");
 const Product = require("../../models/product.model");
+
+// [GET] /administrator/categories/
 module.exports.category = async (req, res) => {
   const find = {
     deleted: false,
@@ -63,6 +65,8 @@ module.exports.category = async (req, res) => {
     sortValue: sortValue,
   });
 };
+
+// [GET] /administrator/categories/create
 module.exports.create = async (req, res) => {
   const find = {
     deleted: false,
@@ -76,8 +80,13 @@ module.exports.create = async (req, res) => {
   });
 };
 
+// [POST] /administrator/categories/create
 module.exports.createPOST = async (req, res) => {
   try {
+    req.body.createdBy = {
+      account_id: res.locals.user.id,
+      createdAt: Date.now(),
+    };
     const record = new Category(req.body);
     await record.save();
     req.flash("messageSuccess", "Thêm danh mục thành công");
@@ -85,15 +94,26 @@ module.exports.createPOST = async (req, res) => {
   } catch (error) {}
 };
 
+// [PATCH] /administrator/categories/delete/:id
 module.exports.delete = async (req, res) => {
   try {
     const id = req.params.id;
-    await Category.updateOne({ _id: id }, { deleted: true });
+    await Category.updateOne(
+      { _id: id },
+      {
+        deleted: true,
+        deletedBy: {
+          account_id: res.locals.user.id,
+          deletedAt: Date.now(),
+        },
+      }
+    );
     req.flash("messageSuccess", "Xóa danh mục thành công");
     res.redirect("back");
   } catch (error) {}
 };
 
+// [PATCH] /administrator/categories/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
   try {
     if (req.params.status && req.params.id) {
@@ -101,7 +121,15 @@ module.exports.changeStatus = async (req, res) => {
       const id = req.params.id;
       await Category.updateOne(
         { _id: id },
-        { status: status, updatedAt: Date.now() }
+        {
+          status: status,
+          $push: {
+            updatedBy: {
+              account_id: res.locals.user.id,
+              updatedAt: Date.now(),
+            },
+          },
+        }
       );
     }
     req.flash("messageSuccess", "Cập nhật trạng thái danh mục thành công");
@@ -111,6 +139,7 @@ module.exports.changeStatus = async (req, res) => {
   }
 };
 
+// [GET] /administrator/categories/edit/:id
 module.exports.edit = async (req, res) => {
   try {
     const record = await Category.findOne({ _id: req.params.id });
@@ -123,11 +152,24 @@ module.exports.edit = async (req, res) => {
     });
   } catch (error) {}
 };
+
+// [PATCH] /administrator/categories/edit/:id
 module.exports.editPATCH = async (req, res) => {
   try {
     req.body.updatedAt = Date.now();
     console.log(req.body);
-    await Category.updateOne({ _id: req.params.id }, { ...req.body });
+    await Category.updateOne(
+      { _id: req.params.id },
+      {
+        ...req.body,
+        $push: {
+          updatedBy: {
+            account_id: res.locals.user.id,
+            updatedAt: Date.now(),
+          },
+        },
+      }
+    );
     req.flash("messageSuccess", "Cập nhật thông tin danh mục thành công");
     res.redirect("back");
   } catch (error) {

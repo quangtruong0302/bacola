@@ -2,8 +2,10 @@
 extends ../../layouts/default.pug
 include ../../mixins/form-alert.pug
 include ../../mixins/form-select-tree.pug
+include ../../mixins/not-access.pug
 
 block main
+  - if (role_user.permissions.includes("create_product"))
     - if (messages.messageError)
         +form-alert-error(messages.messageError)
     #create-product
@@ -61,3 +63,5 @@ block main
         button.btn.btn-primary(type="submit")
           i.fas.fa-save.mr-2
           | Thêm sản phẩm
+  - else
+    +not-access()

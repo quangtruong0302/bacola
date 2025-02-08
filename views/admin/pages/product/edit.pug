@@ -2,8 +2,11 @@
 extends ../../layouts/default.pug
 include ../../mixins/form-alert.pug
 include ../../mixins/form-select-tree.pug
+include ../../mixins/not-access.pug
+
 
 block main
+  - if (role_user.permissions.includes("edit_product"))
     - if (messages.messageError)
         +form-alert-error(messages.messageError)
     - if (messages.messageSuccess)
@@ -56,3 +59,5 @@ block main
         button.btn.btn-primary(type="submit")
           i.fa-regular.fa-pen-to-square
           span.mgl-10px Cập nhật thông tin
+  - else
+    +not-access()

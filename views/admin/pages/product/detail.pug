@@ -1,85 +1,85 @@
 extends ../../layouts/default.pug
+include ../../mixins/not-access.pug
+
 
 block main
-    .detail.pd-70px 
-            //- .row
-            //-     .col-6
-            //-         h2.text-secondary 
-                b Chi tiết sản phẩm
-            //-     .col-6
-            .row.mb-3
-                .col-4
-                    h4.mb-3  
-                        b.text-secondary Hình ảnh sản phẩm
-                    img.img-fluid.mb-3(src=product.thumbnail, alt=product.title)
-                    .row 
-                        .col-3
-                            img.img-fluid(src=product.thumbnail, alt=product.title)
-                        .col-3
-                            img.img-fluid(src=product.thumbnail, alt=product.title)
-                        .col-3
-                            img.img-fluid(src=product.thumbnail, alt=product.title)
-                        .col-3
-                            img.img-fluid(src=product.thumbnail, alt=product.title)
-                .col-8
-                    
-                    h4.mb-3 
-                        b.text-secondary Thông tin chi tiết sản phẩm
-                    .row
-                        .col-6
-                            p 
-                                b Tiêu đề sản phẩm: 
-                                span 
-                                b.text-success #{product.title}
-                            p 
-                                b Giá sản phẩm: 
-                                span $#{product.price}
-                            p 
-                                b Phần trăm giảm giá: 
-                                span #{product.discountPercentage}%
-                            p 
-                                b Giá sau khi giảm: 
-                                span $#{product.price - product.price * product.discountPercentage / 100}
-                            p 
-                                b Số lượng sẵn có trong kho: 
-                                span  #{product.stock}
-                            p 
-                                b Vị trí sản phẩm: 
-                                span  #{product.position}
-                            p 
-                                b Sản phẩm nổi bật: 
-                                span 
-                                span.text-danger Không
-                            p 
-                                b Danh mục: 
-                                span #{product.category ? product.categoryTitle : "Không"}
-                            a.btn.btn-primary(href=`/administrator/products/edit/${product._id}`)
-                                i.fa-regular.fa-pen-to-square  
-                                span.mgl-10px Chỉnh sửa thông tin
-                        .col-6
-                            - if (product.status == "active")
-                                p.status.text-success 
-                                    b Trạng thái: 
-                                    span Hoạt động
-                            - if (product.status == "inactive")
-                                p.status.text-danger 
-                                    b Trạng thái: 
-                                    span Không hoạt động
-                            p 
-                                b Ngày và giờ tạo: 
-                                span #{moment(product.createdAt).format("HH:mm:ss - DD/MM/YYYY")}
-                            p 
-                                b Người tạo: 
-                                span Nguyễn Văn A
-                            p 
-                                b Ngày và giờ cập nhật gần nhất: 
-                                span #{moment(product.updatedAt).format("HH:mm:ss - DD/MM/YYYY")}
-                            p 
-                                b Người cập nhật gần nhất: 
-                                span Trần Văn B
-    
-            .row.mt-4
-                .col-md-12
-                    h4.text-secondary 
-                        b Mô tả sản phẩm
-                    p !{product.description}
+    - if (role_user.permissions.includes("view_product"))
+        .detail.pd-70px 
+                .row.mb-3
+                    .col-4
+                        h4.mb-3  
+                            b.text-secondary Hình ảnh sản phẩm
+                        img.img-fluid.mb-3(src=product.thumbnail, alt=product.title)
+                        .row 
+                            .col-3
+                                img.img-fluid(src=product.thumbnail, alt=product.title)
+                            .col-3
+                                img.img-fluid(src=product.thumbnail, alt=product.title)
+                            .col-3
+                                img.img-fluid(src=product.thumbnail, alt=product.title)
+                            .col-3
+                                img.img-fluid(src=product.thumbnail, alt=product.title)
+                    .col-8
+                        
+                        h4.mb-3 
+                            b.text-secondary Thông tin chi tiết sản phẩm
+                        .row
+                            .col-6
+                                p 
+                                    b Tiêu đề sản phẩm: 
+                                    span 
+                                    b.text-success #{product.title}
+                                p 
+                                    b Giá sản phẩm: 
+                                    span $#{product.price}
+                                p 
+                                    b Phần trăm giảm giá: 
+                                    span #{product.discountPercentage}%
+                                p 
+                                    b Giá sau khi giảm: 
+                                    span $#{(product.price - product.price * product.discountPercentage / 100).toFixed(2)}
+                                p 
+                                    b Số lượng sẵn có trong kho: 
+                                    span  #{product.stock}
+                                p 
+                                    b Vị trí sản phẩm: 
+                                    span  #{product.position}
+                                p 
+                                    b Sản phẩm nổi bật: 
+                                    span 
+                                    span.text-danger Không
+                                p 
+                                    b Danh mục: 
+                                    span #{product.category ? product.categoryTitle : "Không"}
+                                a.btn.btn-primary(href=`/administrator/products/edit/${product._id}`)
+                                    i.fa-regular.fa-pen-to-square  
+                                    span.mgl-10px Chỉnh sửa thông tin
+                            .col-6
+                                - if (product.status == "active")
+                                    p.status.text-success 
+                                        b Trạng thái: 
+                                        span Hoạt động
+                                - if (product.status == "inactive")
+                                    p.status.text-danger 
+                                        b Trạng thái: 
+                                        span Không hoạt động
+                                p 
+                                    b Ngày và giờ tạo: 
+                                    span #{moment(product.createdAt).format("HH:mm:ss - DD/MM/YYYY")}
+                                p 
+                                    b Người tạo: 
+                                    span #{product.user_created_fullName}
+                                p 
+                                    b Ngày và giờ cập nhật gần nhất: 
+                                    span #{moment(product.updatedAt).format("HH:mm:ss - DD/MM/YYYY")}
+                                p 
+                                    b Người cập nhật gần nhất: 
+                                    span #{product.user_updated_fullName}
+        
+                .row.mt-4
+                    .col-md-12
+                        h4.text-secondary 
+                            b Mô tả sản phẩm
+                        p !{product.description}
+    - else
+        +not-access()

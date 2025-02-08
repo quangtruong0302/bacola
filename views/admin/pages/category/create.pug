@@ -3,8 +3,10 @@ extends ../../layouts/default.pug
 include ../../mixins/form-alert.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-select-tree.pug
+include ../../mixins/not-access.pug
 
 block main
+  - if (role_user.permissions.includes("create_category"))
     - if (messages.messageError)
         +form-alert-error(messages.messageError)
     #create-product
@@ -46,3 +48,5 @@ block main
         button.btn.btn-primary(type="submit")
           i.fas.fa-save.mr-2
           | Thêm danh mục 
+  - else
+    +not-access()

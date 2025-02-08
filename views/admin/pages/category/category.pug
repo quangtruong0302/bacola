@@ -7,91 +7,110 @@ include ../../mixins/form-add.pug
 include ../../mixins/form-trash.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-alert.pug
+include ../../mixins/not-access.pug
 
 block main 
-    .main-top
-        .form-filter-change-multi-search.d-flex.align-items-center
-            +form-filter()
-            .card.mgr-10px
-                .card-header
-                    | Tiêu chí sắp xếp
-                .card-body
-                    form.d-flex.align-items-center()
-                        select.custom-select.mgr-10px(name="sort-key")
-                            option(selected, disabled) Chọn tiêu chí sắp xếp
-                            option(value='title' selected=sortKey == 'title') Tiêu đề
-                            option(value='createdAt' selected=sortKey == 'createdAt') Ngày và giờ tạo
-                            option(value='updatedAt' selected=sortKey == 'updatedAt') Ngày và giờ cập nhật gần nhất
-                        select.custom-select.mgr-10px(name="sort-value")
-                            option(selected, disabled) Chọn hành động
-                            option(value='asc' selected=sortValue == 'asc') Tăng dần
-                            option(value='desc' selected=sortValue == 'desc') Giảm dần
-                        button.btn.btn-success.mg-0px(type="submit")
-                            i.fa-solid.fa-sort  
-    
-            +form-add("Thêm danh mục", "/administrator/categories/create")
-    - if (messages.messageSuccess)
-        +form-alert-success(messages.messageSuccess)
-    - if (messages.messageError)
-        +form-alert-error(messages.messageError)
-    .main-table 
-        table.table.table-bordered(checkbox-multi)
-            thead 
-                tr
-                    th(colspan="10").text-center DANH SÁCH DANH MỤC SẢN PHẨM  
-            thead
-                tr
-                    th.check-box
-                        label
-                            input(type="checkbox" name="check-all")
-                    th(scope='col') STT
-                    th(scope='col') Tên danh mục
-                    th(scope='col') Hình ảnh
-                    th(scope='col') Danh mục cha
-                    th(scope='col') Số lượng sản phẩm
-                    th(scope='col') Ngày tạo
-                    th(scope='col') Ngày chỉnh sửa
-                    th(scope='col') Trạng thái
-                    th(scope='col') Hành động
-            tbody
-                - if (categories.length > 0)
-                    each category, index in categories
-                        tr
-                            td.check-box
-                                label
-                                    input(type="checkbox" name="id" value=category._id)
-                            td #{pagination.limitItems * (pagination.currentPage - 1) + (index + 1)}
-                            td.td-title #{category.title}
-                            - if (category.thumbnail == "/uploads/loading.png")
-                                td.td-image
-                                    img.img-rotate(src=category.thumbnail alt="Hình ảnh danh mục" width="100px" style="padding: 30px")
-                            - else 
-                                td.td-image
-                                    img(src=category.thumbnail alt="Hình ảnh sản phẩm" width="100px")
-                            td #{category.parentTitle ? category.parentTitle : "Không"}
-                            td #{category.countProduct ? category.countProduct : "0"} 
-                            td
-                                span #{moment(category.createdAt).format("DD/MM/YYYY")}
-                            td
-                                span #{moment(category.updatedAt).format("DD/MM/YYYY")}                           
-                            td 
-                                -if(category.status=="active")
-                                    button.btn.btn-success(button-change-status data-status=`${category.status}` data-id=`${category._id}` data-name="category")
-                                        i.fa-solid.fa-check
-                                -if(category.status=="inactive")
-                                    button.btn.btn-danger(button-change-status data-status=`${category.status}` data-id=`${category._id}` data-name="category")
-                                        i.fa-solid.fa-ban
-                            td
-                                a.btn.btn-success.mgr-10px(href=`/administrator/categories/detail/${category._id}`)
-                                    i.fa-solid.fa-circle-info
-                                a.btn.btn-primary.mgr-10px(href=`/administrator/categories/edit/${category._id}`)
-                                    i.fa-regular.fa-pen-to-square
-                                button.btn.btn-danger(type="button" data-id=category._id data-name="category" button-delete-single)
-                                    i.fa-solid.fa-delete-left
-                - else 
+    - if (role_user.permissions.includes("view_category"))
+        .main-top
+            .form-filter-change-multi-search.d-flex.align-items-center
+                +form-filter()
+                .card.mgr-10px
+                    .card-header
+                        | Tiêu chí sắp xếp
+                    .card-body
+                        form.d-flex.align-items-center()
+                            select.custom-select.mgr-10px(name="sort-key")
+                                option(selected, disabled) Chọn tiêu chí sắp xếp
+                                option(value='title' selected=sortKey == 'title') Tiêu đề
+                                option(value='createdAt' selected=sortKey == 'createdAt') Ngày và giờ tạo
+                                option(value='updatedAt' selected=sortKey == 'updatedAt') Ngày và giờ cập nhật gần nhất
+                            select.custom-select.mgr-10px(name="sort-value")
+                                option(selected, disabled) Chọn hành động
+                                option(value='asc' selected=sortValue == 'asc') Tăng dần
+                                option(value='desc' selected=sortValue == 'desc') Giảm dần
+                            button.btn.btn-success.mg-0px(type="submit")
+                                i.fa-solid.fa-sort  
+                - if (role_user.permissions.includes("create_category"))
+                    +form-add("Thêm danh mục", "/administrator/categories/create")
+        - if (messages.messageSuccess)
+            +form-alert-success(messages.messageSuccess)
+        - if (messages.messageError)
+            +form-alert-error(messages.messageError)
+        .main-table 
+            table.table.table-bordered(checkbox-multi)
+                thead 
                     tr
-                        td(colspan="10").text-center Không tìm thấy danh mục
-        +pagination(pagination)
-    form(action="" method="POST" form-change-status).d-none     
-    form(action="" method="POST" form-delete-single).d-none      
-    
+                        th(colspan="10").text-center DANH SÁCH DANH MỤC SẢN PHẨM  
+                thead
+                    tr
+                        th.check-box
+                            label
+                                input(type="checkbox" name="check-all")
+                        th(scope='col') STT
+                        th(scope='col') Tên danh mục
+                        th(scope='col') Hình ảnh
+                        th(scope='col') Danh mục cha
+                        th(scope='col') Số lượng sản phẩm
+                        th(scope='col') Ngày tạo
+                        th(scope='col') Ngày chỉnh sửa
+                        th(scope='col') Trạng thái
+                        th(scope='col') Hành động
+                tbody
+                    - if (categories.length > 0)
+                        each category, index in categories
+                            tr
+                                td.check-box
+                                    label
+                                        input(type="checkbox" name="id" value=category._id)
+                                td #{pagination.limitItems * (pagination.currentPage - 1) + (index + 1)}
+                                td.td-title #{category.title}
+                                - if (category.thumbnail == "/uploads/loading.png")
+                                    td.td-image
+                                        img.img-rotate(src=category.thumbnail alt="Hình ảnh danh mục" width="100px" style="padding: 30px")
+                                - else 
+                                    td.td-image
+                                        img(src=category.thumbnail alt="Hình ảnh sản phẩm" width="100px")
+                                td #{category.parentTitle ? category.parentTitle : "Không"}
+                                td #{category.countProduct ? category.countProduct : "0"} 
+                                td
+                                    span #{moment(category.createdBy.createdAt).format("DD/MM/YYYY")}
+                                    br
+                                    span #{moment(category.createdBy.createdAt).format("HH:mm:ss")}
+                                td
+                                    span #{moment(category.updatedBy.updatedAt).format("DD/MM/YYYY")}
+                                    br 
+                                    span #{moment(category.updatedBy.updatedAt).format("HH:mm:ss")}                          
+                                td 
+                                    - if (role_user.permissions.includes("change_status_category"))
+                                        -if(category.status=="active")
+                                            button.btn.btn-success(button-change-status data-status=`${category.status}` data-id=`${category._id}` data-name="category")
+                                                i.fa-solid.fa-check
+                                        -if(category.status=="inactive")
+                                            button.btn.btn-danger(button-change-status data-status=`${category.status}` data-id=`${category._id}` data-name="category")
+                                                i.fa-solid.fa-ban
+                                    - else 
+                                        -if(category.status=="active")
+                                            button.btn.btn-success()
+                                                i.fa-solid.fa-check
+                                        -if(category.status=="inactive")
+                                            button.btn.btn-danger()
+                                                i.fa-solid.fa-ban
+
+                                td
+                                    - if (role_user.permissions.includes("view_category"))
+                                        a.btn.btn-success.mgr-10px(href=`/administrator/categories/detail/${category._id}`)
+                                            i.fa-solid.fa-circle-info
+                                    - if (role_user.permissions.includes("edit_category"))
+                                        a.btn.btn-primary.mgr-10px(href=`/administrator/categories/edit/${category._id}`)
+                                            i.fa-regular.fa-pen-to-square
+                                    - if (role_user.permissions.includes("delete_category"))
+                                        button.btn.btn-danger(type="button" data-id=category._id data-name="category" button-delete-single)
+                                            i.fa-solid.fa-delete-left
+                    - else 
+                        tr
+                            td(colspan="10").text-center Không tìm thấy danh mục
+            +pagination(pagination)
+        form(action="" method="POST" form-change-status).d-none     
+        form(action="" method="POST" form-delete-single).d-none      
+    - else
+        +not-access()

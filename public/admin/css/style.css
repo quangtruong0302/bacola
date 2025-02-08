@@ -73,10 +73,14 @@ header .header-right ul li .user {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 header .header-right ul li .user img {
   width: 20px;
   height: 20px;
+}
+header .header-right ul li .user ul {
+  position: relative;
 }
 header .header-right ul .notification,
 header .header-right ul .setting {
@@ -312,4 +316,24 @@ span.star {
 
 .pdl-5px {
   padding-left: 5px;
+}
+
+.logout {
+  display: block;
+  width: 95px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #737373;
+}
+
+.mgl-5px {
+  margin-left: 5px;
+}
+
+.h-100vh {
+  height: 100vh;
+}
+
+.mrt-20px {
+  margin-top: 20px;
 }/*# sourceMappingURL=style.css.map */

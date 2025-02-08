@@ -4,34 +4,36 @@ include ../../mixins/not-access.pug
 
 
 block main
-    - if (role_user.permissions.includes("create_accounts"))
+    - if (role_user.permissions.includes("edit_accounts"))
         - if (messages.messageError)
             +form-alert-error(messages.messageError)
+        - if (messages.messageSuccess)
+            +form-alert-success(messages.messageSuccess)
         #create-product
-            form(action="/administrator/accounts/create" method="post" enctype="multipart/form-data")
+            form(action=`/administrator/accounts/edit/${account._id}?_method=PATCH` method="POST" enctype="multipart/form-data")
                 .mb-3
                     label(for="fullName") Họ và tên
-                    input#fullName.form-control(type="text" name="fullName")
+                    input#fullName.form-control(type="text" name="fullName" value=account.fullName)
                 .mb-3
                     label(for="phone") Số điện thoại
-                    input#phoneNumber.form-control(type="text" name="phone")
+                    input#phoneNumber.form-control(type="text" name="phone" value=account.phone)
                 .mb-3
                     label(for="email") Email
-                    input#email.form-control(type="email" name="email")
+                    input#email.form-control(type="email" name="email" value=account.email)
                     
                 .mb-3
-                    label(for="password") Mật khẩu
+                    label(for="password") Đổi mật khẩu
                     input#password.form-control(type="password" name="password")
                 .mb-3
-                    label(for="confirmPassword") Nhập lại mật khẩu
+                    label(for="confirmPassword") Nhập lại mật khẩu mới
                     input#password.form-control(type="password" name="confirmPassword")
                 
                 .mb-3
                     label(for="role") Quyền
                     select#role.form-control(name="role")
-                        option(value="" disabled selected) -- Chọn nhóm quyền -- 
+                        option(value="" disabled) -- Chọn nhóm quyền -- 
                         each role in roles
-                            option(value=role._id) #{role.title}
+                            option(value=role._id selected=role._id==account.role ? true : false) #{role.title}
                 .mb-3
                     label.mgr-10px(for="thumbnail" class="form-label") Ảnh đại diện
                     input#thumbnail(type="file" name="thumbnail" accept="image/*")
@@ -45,11 +47,11 @@ block main
                     span.text-success  Hoạt động
                     span )
                     .form-check
-                        input#statusActive.form-check-input(type="radio" name="status" value="active" checked)
+                        input#statusActive.form-check-input(type="radio" name="status" value="active" checked=account.status == "active" ? true : false)
                         label.text-success(for="statusActive" class="form-check-label") Hoạt động
                     .form-check
-                        input#statusInactive.form-check-input(type="radio" name="status" value="inactive")
+                        input#statusInactive.form-check-input(type="radio" name="status" value="inactive" checked=account.status == "inactive" ? true : false)
                         label.text-danger(for="statusInactive" class="form-check-label") Không hoạt động
-                button.btn.btn-primary(type="submit") Thêm Tài Khoản
+                button.btn.btn-primary(type="submit") Cập nhật thông tin
     - else 
         +not-access()

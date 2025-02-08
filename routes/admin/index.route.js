@@ -6,13 +6,14 @@ const categoryRoute = require("./category.route");
 const roleRoute = require("./role.route");
 const accountRoute = require("./account.route");
 const authRoute = require("./auth.route");
+const middleware = require("../../middlewares/admin/auth.middleware");
 const PATH = "/administrator";
 
 module.exports = (app) => {
-  app.use(`${PATH}/`, dashboardRoute);
-  app.use(`${PATH}/products`, productRoute);
-  app.use(`${PATH}/categories`, categoryRoute);
-  app.use(`${PATH}/roles`, roleRoute);
-  app.use(`${PATH}/accounts`, accountRoute);
+  app.use(`${PATH}/dashboard`, middleware.requireAuth, dashboardRoute);
+  app.use(`${PATH}/products`, middleware.requireAuth, productRoute);
+  app.use(`${PATH}/categories`, middleware.requireAuth, categoryRoute);
+  app.use(`${PATH}/roles`, middleware.requireAuth, roleRoute);
+  app.use(`${PATH}/accounts`, middleware.requireAuth, accountRoute);
   app.use(`${PATH}/auth`, authRoute);
 };

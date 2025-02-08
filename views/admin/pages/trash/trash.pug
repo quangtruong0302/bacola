@@ -7,60 +7,73 @@ include ../../mixins/form-add.pug
 include ../../mixins/form-trash.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-alert.pug
+include ../../mixins/not-access.pug
 
 block main 
-    .main-top
-        .form-filter-change-multi-search.d-flex.align-items-center
-            +form-filter()
-            +form-change-multi-trash()
-            +form-search()
-            +form-add("Thêm sản phẩm")
-    - if (messages.messageSuccess)
-        +form-alert-success(messages.messageSuccess)
-    - if (messages.messageError)
-        +form-alert-success(messages.messageError)
-    .main-table 
-        table.table.table-bordered(checkbox-multi)
-            thead
-                tr
-                    th.check-box
-                        label
-                            input(type="checkbox" name="check-all")
-                    th(scope='col') STT
-                    th(scope='col') Tên sản phẩm
-                    th(scope='col') Hình ảnh
-                    th(scope='col') Giá
-                    th(scope='col') Số lượng
-                    th(scope='col') Giảm giá (%)
-                    th(scope='col') Vị trí
-                    th(scope='col') Ngày xóa
-                    th(scope='col') Người xóa
-                    th(scope='col') Hành động
-            tbody
-                each product, index in products
+    - if (role_user.permissions.includes("delete_product") && role_user.permissions.includes("edit_product"))
+        .main-top
+            .form-filter-change-multi-search.d-flex.align-items-center
+                +form-filter()
+                +form-change-multi-trash()
+                +form-search()
+                +form-add("Thêm sản phẩm")
+        - if (messages.messageSuccess)
+            +form-alert-success(messages.messageSuccess)
+        - if (messages.messageError)
+            +form-alert-success(messages.messageError)
+        .main-table 
+            table.table.table-bordered(checkbox-multi)
+                thead
                     tr
-                        td.check-box
+                        th.check-box
                             label
-                                input(type="checkbox" name="id" value=product._id)
-                        td #{index + 1}
-                        td.td-title #{product.title}
-                        td.td-image
-                            img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
-                        td #{product.price}
-                        td #{product.stock}
-                        td -#{product.discountPercentage}%
-                        td #{product.position}
-                        td 20/12/2024
-                        td Bùi Quang Trưởng
-                        td
-                            button.btn.btn-success.mgr-10px(type="button" button-restore-single data-id=product._id)
-                                i.fa-solid.fa-rotate-left.mgr-5px
-                                span Khôi phục
-                            button.btn.btn-danger(type="button" data-id=product._id data-name="product-in-trash" button-delete-single)
-                                i.fa-solid.fa-delete-left.mgr-5px
-                                span Xóa vĩnh viễn
-    +pagination(pagination)      
-    form(action="" method="POST" form-change-status).d-none     
-    form(action="" method="POST" form-delete-single).d-none   
-    form(action="" method="POST" form-restore-single).d-none      
-    
+                                input(type="checkbox" name="check-all")
+                        th(scope='col') STT
+                        th(scope='col') Tên sản phẩm
+                        th(scope='col') Hình ảnh
+                        th(scope='col') Giá ($)
+                        th(scope='col') Số lượng
+                        th(scope='col') Giảm giá (%)
+                        th(scope='col') Vị trí
+                        th(scope='col') Ngày tạo
+                        th(scope='col') Ngày xóa
+                        th(scope='col') Hành động
+                tbody
+                    each product, index in products
+                        tr
+                            td.check-box
+                                label
+                                    input(type="checkbox" name="id" value=product._id)
+                            td #{index + 1}
+                            td.td-title #{product.title}
+                            td.td-image
+                                img(src=product.thumbnail alt="Hình ảnh sản phẩm" width="100px")
+                            td #{product.price}
+                            td #{product.stock}
+                            td -#{product.discountPercentage}%
+                            td #{product.position}
+                            td
+                                span Ngày #{moment(product.createdBy.createdAt).format("DD/MM/YYYY")}
+                                br 
+                                span Lúc #{moment(product.createdBy.createdAt).format("HH:mm:ss")}
+                                br 
+                                span Bởi #{product.user_created_fullName}
+                            td 
+                                span Ngày: #{moment(product.deletedBy.deletedAt).format("DD/MM/YYYY")}
+                                br 
+                                span Giờ: #{moment(product.deletedBy.deletedAt).format("HH:mm:ss")}
+                                br 
+                                span Bởi: #{product.user_deleted_fullName}
+                            td
+                                button.btn.btn-success.mgr-10px(type="button" button-restore-single data-id=product._id)
+                                    i.fa-solid.fa-rotate-left.mgr-5px
+                                    span Khôi phục
+                                button.btn.btn-danger(type="button" data-id=product._id data-name="product-in-trash" button-delete-single)
+                                    i.fa-solid.fa-delete-left.mgr-5px
+                                    span Xóa
+        +pagination(pagination)      
+        form(action="" method="POST" form-change-status).d-none     
+        form(action="" method="POST" form-delete-single).d-none   
+        form(action="" method="POST" form-restore-single).d-none      
+    - else 
+        +not-access()    

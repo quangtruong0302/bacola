@@ -21,6 +21,7 @@ app.use(express.static(`${__dirname}/public`));
 
 app.use(cookieParser("bacola"));
 app.use(session({ cookie: { maxAge: 60000 } }));
+
 app.use(flash());
 
 app.locals.moment = moment;
