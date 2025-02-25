@@ -20,7 +20,8 @@ app.set("views", `${__dirname}/views`);
 app.use(express.static(`${__dirname}/public`));
 
 app.use(cookieParser("bacola"));
-app.use(session({ cookie: { maxAge: 60000 } }));
+app.use(session({ cookie: { maxAge: 5 * 60 * 1000 } }));
+// app.use(session());
 
 app.use(flash());
 

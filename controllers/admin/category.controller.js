@@ -177,3 +177,7 @@ module.exports.editPATCH = async (req, res) => {
     res.redirect("back");
   }
 };
+
+module.exports.detail = async (req, res) => {
+  res.render("admin/pages/category/detail.pug");
+};
